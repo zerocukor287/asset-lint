@@ -1,1 +1,1 @@
-mod duplicates;
+pub(crate) mod duplicates;

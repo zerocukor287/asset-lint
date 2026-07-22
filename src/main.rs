@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::process::ExitCode;
 
 mod checks;
 
@@ -14,12 +15,15 @@ struct Args {
     no_duplicates: bool,
 }
 
-fn main() {
+fn main() -> ExitCode {
+    env_logger::init();
     let args = Args::parse();
 
     if args.no_duplicates {
         println!("Checking {} for duplicates", args.assets_path);
+        ExitCode::from(checks::duplicates::check_duplicates(args.assets_path))
     } else {
-        println!("Checking only {}", args.assets_path);
+        println!("No rules to check");
+        ExitCode::SUCCESS
     }
 }
