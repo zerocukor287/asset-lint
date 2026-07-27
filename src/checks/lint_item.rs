@@ -1,3 +1,3 @@
 pub struct LintItem {
-    text: String,
+    pub text: String,
 }

@@ -8,3 +8,5 @@ clap_derive = "4.6.3"
 clap = { version = "4.6.3", features = ["derive"] }
 log = "0.4.33"
 env_logger = "0.11.11"
+walkdir = "2.5.0"
+blake3 = "1.8.5"

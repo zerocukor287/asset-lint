@@ -1,6 +1,6 @@
-use crate::checks::lint_item::LintItem;
-use std::path::PathBuf;
+use crate::{asset_list_builder::AssetItem, checks::lint_item::LintItem};
 
+// `Checker` is the interface that each rule must implement
 pub trait Checker {
-    fn check(&mut self, path: &PathBuf) -> Vec<LintItem>;
+    fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem>;
 }

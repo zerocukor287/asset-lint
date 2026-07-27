@@ -15,11 +15,26 @@ With `--no-placeholder` flag, `asset-lint` will warn if any of your assets match
 the placeholder pattern.
 
 ## Constant quality gate - Integrate in CI
-Quality first, integrate `asset-lint` into your pipeline. With industry wide stuctured
-`.json` report, it works well with most major CI providers.
+Quality first, integrate `asset-lint` into your pipeline.
+With industry wide stuctured `.json` report, it works well with most
+major CI providers.
 
 ## Cross-Engine, Cross-platform
-By using the `asset_lint_list.json` format, `asset-linter` can work with Bevy, Godot, Unity,
-or other game engines.
+By using the `asset_lint_list.json` format, `asset-lint` can work with Bevy,
+Godot, Unity, or other game engines.
 
 # Documentation
+Calling Asset Lint requires only the path to your asset folder
+```
+asset-lint --assets-path ./assets/ --no-duplicated-names
+```
+or if you already have an `asset_lint_list.json` in the folder you're executing
+`asset-lint`, it is as simple as:
+```
+asset-lint --no-duplicated-names
+```
+even simpler, if you have an `.asset-lint.toml` file in the folder you're
+executing `asset-lint`, then it couldn't be simpler:
+```
+asset-lint
+```
