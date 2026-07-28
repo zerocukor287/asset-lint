@@ -1,6 +1,6 @@
 use crate::{
-    asset_list_builder::AssetItem,
-    checks::{checker::Checker, lint_item::LintItem},
+    asset_list::AssetItem,
+    checks::{Checker, lint_item::LintItem},
 };
 
 pub struct DuplicateChecker {}

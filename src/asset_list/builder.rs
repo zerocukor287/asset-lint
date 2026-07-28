@@ -1,35 +1,14 @@
 use std::{
     fs::File,
     io::{BufReader, Read},
-    path::{Path, PathBuf},
+    path::Path,
     todo,
 };
 
 use log::{debug, error};
 use walkdir::WalkDir;
 
-// Types of supported assets
-pub enum AssetType {
-    Image,
-    Sound,
-    Binary,
-    Text,
-    Unknown,
-}
-
-// Types for supported hashing algorithms
-pub enum HashType {
-    Blake3,
-    Unknown,
-}
-
-pub struct AssetItem {
-    pub path: PathBuf,
-    pub asset_type: AssetType,
-    pub size: u64,
-    pub hash: [u8; 32],
-    pub hash_type: HashType,
-}
+use crate::asset_list::{AssetItem, AssetType};
 
 // this function either reads a `asset_lint_list.json` or naively
 // builds the asset list from the given path
@@ -49,7 +28,6 @@ pub fn read_or_build_asset_list(root: Option<String>) -> Vec<AssetItem> {
                             asset_type: AssetType::Unknown,
                             size: path.metadata().unwrap().len(),
                             hash: claculate_hash(path.path()),
-                            hash_type: HashType::Blake3,
                         });
                     }
                 }

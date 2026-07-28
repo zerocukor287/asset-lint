@@ -1,14 +1,14 @@
 use clap::Parser;
 use std::process::ExitCode;
 
-use crate::asset_list_builder::read_or_build_asset_list;
-use crate::checks::checker::Checker;
+use crate::asset_list::builder::read_or_build_asset_list;
+use crate::checks::Checker;
 use crate::checks::duplicates::DuplicateChecker;
 use crate::checks::lint_item::LintItem;
+use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
-use crate::output::lint_output::LintOutput;
 
-mod asset_list_builder;
+mod asset_list;
 mod checks;
 mod output;
 
@@ -23,6 +23,10 @@ struct Args {
     /// Check for duplicate files
     #[arg(long, action = clap::ArgAction::SetTrue)]
     no_duplicates: bool,
+
+    /// Minimal console output
+    #[arg(long, action = clap::ArgAction::SetFalse)]
+    quiet: bool,
 }
 
 fn main() -> ExitCode {
@@ -49,7 +53,9 @@ fn main() -> ExitCode {
 
     // print the results
     let mut printers: Vec<Box<dyn LintOutput>> = Vec::new();
-    printers.push(Box::new(ConsoleOutput {}));
+    if !args.quiet {
+        printers.push(Box::new(ConsoleOutput {}));
+    }
 
     for output in printers.iter_mut() {
         output.print_result(&lint_result);

@@ -1,4 +1,4 @@
-use crate::{checks::lint_item::LintItem, output::lint_output::LintOutput};
+use crate::{checks::lint_item::LintItem, output::LintOutput};
 
 pub struct ConsoleOutput {}
 

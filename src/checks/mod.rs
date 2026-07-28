@@ -1,3 +1,9 @@
-pub(crate) mod checker;
 pub(crate) mod duplicates;
 pub(crate) mod lint_item;
+
+use crate::{asset_list::AssetItem, checks::lint_item::LintItem};
+
+// `Checker` is the interface that each rule must implement
+pub trait Checker {
+    fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem>;
+}

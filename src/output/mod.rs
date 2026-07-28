@@ -1,2 +1,7 @@
+use crate::checks::lint_item::LintItem;
+
 pub(crate) mod console;
-pub(crate) mod lint_output;
+
+pub trait LintOutput {
+    fn print_result(&mut self, result: &[LintItem]);
+}
