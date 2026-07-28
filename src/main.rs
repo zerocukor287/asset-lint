@@ -1,10 +1,14 @@
+//! Asset-lint keeps your game assets neat and tidy.
+//!
+//! Command line tool to find and fix common problems with your game assets.
+
 use clap::Parser;
 use std::process::ExitCode;
 
 use crate::asset_list::builder::read_or_build_asset_list;
 use crate::checks::Checker;
+use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
-use crate::checks::lint_item::LintItem;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
 
@@ -12,6 +16,7 @@ mod asset_list;
 mod checks;
 mod output;
 
+/// Structure to define the possible command line parameters
 #[derive(Parser, Debug)]
 #[command(name = "asset-lint")]
 #[command(version, about, long_about = None)]
@@ -29,6 +34,8 @@ struct Args {
     quiet: bool,
 }
 
+/// Entry point of the application.
+/// Call it like `asset-lint --help` to see the possible usage
 fn main() -> ExitCode {
     env_logger::init();
     let args = Args::parse();
