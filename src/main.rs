@@ -9,6 +9,7 @@ use crate::asset_list::builder::read_or_build_asset_list;
 use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
+use crate::checks::max_size::MaxSizeCheck;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
 
@@ -29,6 +30,10 @@ struct Args {
     #[arg(long, action = clap::ArgAction::SetTrue)]
     no_duplicates: bool,
 
+    /// Check for too big assets
+    #[arg(long)]
+    max_size: Option<u64>,
+
     /// Minimal console output
     #[arg(long, action = clap::ArgAction::SetFalse)]
     quiet: bool,
@@ -45,7 +50,13 @@ fn main() -> ExitCode {
     if args.no_duplicates {
         checkers.push(Box::new(DuplicateChecker::new()));
         println!("Checking for duplicates");
-    } else {
+    }
+    if let Some(max_size) = args.max_size {
+        checkers.push(Box::new(MaxSizeCheck::new(max_size)));
+        println!("Checking for assets bigger than {} bytes", max_size);
+    }
+
+    if checkers.is_empty() {
         println!("No rules to check");
     }
 

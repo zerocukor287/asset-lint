@@ -1,6 +1,7 @@
 //! This module holds all the logic behind the different checks
 
 pub(crate) mod duplicates;
+pub(crate) mod max_size;
 
 use crate::asset_list::AssetItem;
 
