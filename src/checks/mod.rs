@@ -2,6 +2,7 @@
 
 pub(crate) mod duplicates;
 pub(crate) mod max_size;
+pub(crate) mod placeholders;
 
 use crate::asset_list::AssetItem;
 

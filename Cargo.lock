@@ -82,6 +82,7 @@ dependencies = [
  "clap_derive",
  "env_logger",
  "log",
+ "regex",
  "walkdir",
 ]
 

@@ -10,6 +10,7 @@ use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
 use crate::checks::max_size::MaxSizeCheck;
+use crate::checks::placeholders::PlaceholderChecker;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
 
@@ -34,6 +35,10 @@ struct Args {
     #[arg(long)]
     max_size: Option<u64>,
 
+    /// Cehck for placeholder assets
+    #[arg(long)]
+    no_placeholders: Vec<String>,
+
     /// Minimal console output
     #[arg(long, action = clap::ArgAction::SetFalse)]
     quiet: bool,
@@ -54,6 +59,10 @@ fn main() -> ExitCode {
     if let Some(max_size) = args.max_size {
         checkers.push(Box::new(MaxSizeCheck::new(max_size)));
         println!("Checking for assets bigger than {} bytes", max_size);
+    }
+    if !args.no_placeholders.is_empty() {
+        checkers.push(Box::new(PlaceholderChecker::new(args.no_placeholders)));
+        println!("Checking for placeholder assets");
     }
 
     if checkers.is_empty() {
