@@ -40,7 +40,7 @@ struct Args {
     no_placeholders: Vec<String>,
 
     /// Minimal console output
-    #[arg(long, action = clap::ArgAction::SetFalse)]
+    #[arg(long, default_value_t = false)]
     quiet: bool,
 }
 
