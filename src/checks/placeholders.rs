@@ -1,5 +1,6 @@
 //! Warns if any placeholders are found among the assets
 
+use log::debug;
 use regex::Regex;
 
 use crate::{
@@ -25,9 +26,10 @@ impl PlaceholderChecker {
 impl Checker for PlaceholderChecker {
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
-
+        debug!("Found {} regex patterns", self.patterns.len());
         for asset in assets {
             for path_part in asset.path.iter() {
+                debug!("Checking {}", path_part.to_string_lossy());
                 if self
                     .patterns
                     .iter()
