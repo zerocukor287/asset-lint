@@ -43,3 +43,55 @@ impl Checker for PlaceholderChecker {
         result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::asset_list::AssetType;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_placeholder_found() {
+        let mut checker = PlaceholderChecker::new(vec!["placeholder_.*".to_string()]);
+        let assets = vec![
+            AssetItem {
+                path: PathBuf::from("assets/placeholder_hero.png"),
+                asset_type: AssetType::Image,
+                size: 1024,
+                hash: [0; 32],
+            },
+            AssetItem {
+                path: PathBuf::from("assets/real_background.png"),
+                asset_type: AssetType::Image,
+                size: 2048,
+                hash: [0; 32],
+            },
+        ];
+
+        let results = checker.check(&assets);
+        assert_eq!(results.len(), 1);
+        assert!(results[0].text.contains("placeholder_hero.png"));
+    }
+
+    #[test]
+    fn test_no_placeholder_found() {
+        let mut checker = PlaceholderChecker::new(vec!["placeholder_.*".to_string()]);
+        let assets = vec![
+            AssetItem {
+                path: PathBuf::from("assets/hero.png"),
+                asset_type: AssetType::Image,
+                size: 1024,
+                hash: [0; 32],
+            },
+            AssetItem {
+                path: PathBuf::from("assets/background.png"),
+                asset_type: AssetType::Image,
+                size: 2048,
+                hash: [0; 32],
+            },
+        ];
+
+        let results = checker.check(&assets);
+        assert_eq!(results.len(), 0);
+    }
+}
