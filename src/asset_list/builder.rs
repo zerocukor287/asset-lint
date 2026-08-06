@@ -4,13 +4,12 @@ use std::{
     fs::File,
     io::{BufReader, Read},
     path::Path,
-    todo,
 };
 
 use log::{debug, error};
 use walkdir::WalkDir;
 
-use crate::asset_list::{AssetItem, AssetType};
+use crate::asset_list::{AssetItem, AssetType, reader::read_asset_lint_list_file};
 
 /// this function either reads a `asset_lint_list.json` or naively
 /// builds the asset list from the given path.
@@ -43,7 +42,8 @@ pub fn read_or_build_asset_list(root: Option<String>) -> Vec<AssetItem> {
         debug!("Found {} assets in {:?}", asset_list.len(), path);
     } else {
         // look for the `asset_lint_list.json` file in cwd
-        todo!()
+        println!("Reading `asset_lint_list.json`...");
+        asset_list = read_asset_lint_list_file();
     }
 
     asset_list
@@ -103,8 +103,14 @@ fn guess_type(path: &Path) -> AssetType {
     AssetType::Unknown
 }
 
-#[test]
-fn test_type() {
-    assert_eq!(guess_type(Path::new("./asset-lint.png")), AssetType::Image);
-    assert_eq!(guess_type(Path::new("./asset/")), AssetType::Unknown);
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::asset_list::AssetType;
+
+    #[test]
+    fn test_type() {
+        assert_eq!(guess_type(Path::new("./asset-lint.png")), AssetType::Image);
+        assert_eq!(guess_type(Path::new("./asset/")), AssetType::Unknown);
+    }
 }

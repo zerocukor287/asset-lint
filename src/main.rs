@@ -6,6 +6,7 @@ use clap::Parser;
 use std::process::ExitCode;
 
 use crate::asset_list::builder::read_or_build_asset_list;
+use crate::asset_list::exporter::export_asset_list;
 use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
@@ -17,6 +18,9 @@ use crate::output::console::ConsoleOutput;
 mod asset_list;
 mod checks;
 mod output;
+
+// minimum required `asser_lint_list.json` version
+const MINIMUM_ASSET_LIST_VERSION: u32 = 1;
 
 /// Structure to define the possible command line parameters
 #[derive(Parser, Debug)]
@@ -42,6 +46,10 @@ struct Args {
     /// Minimal console output
     #[arg(long, default_value_t = false)]
     quiet: bool,
+
+    /// Path to export naive `asset_lint_list.json`
+    #[arg(long)]
+    export_asset_list: Option<String>,
 }
 
 /// Entry point of the application.
@@ -86,6 +94,10 @@ fn main() -> ExitCode {
 
     for output in printers.iter_mut() {
         output.print_result(&lint_result);
+    }
+
+    if let Some(export_path) = args.export_asset_list {
+        export_asset_list(export_path, &assets);
     }
 
     ExitCode::SUCCESS
