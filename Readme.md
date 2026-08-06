@@ -12,7 +12,11 @@ unoptimized.
 
 ## No more placeholders
 With `--no-placeholder` flag, `asset-lint` will warn if any of your assets matches
-the placeholder pattern.
+the placeholder patterns.
+
+> [!TIP]
+When working on a new feature that you don't want to leak, add that pattern
+to the `--no-placeholder` pattern list.
 
 ## Constant quality gate - Integrate in CI
 Quality first, integrate `asset-lint` into your pipeline.
