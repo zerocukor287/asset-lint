@@ -9,5 +9,8 @@ impl LintOutput for ConsoleOutput {
         for (index, item) in results.iter().enumerate() {
             println!("\nFinding {} of {}\n\t{}", index, max_findings, item.text);
         }
+        if results.is_empty() {
+            println!("\nHooray! Your assets are in perfect shape.");
+        }
     }
 }
