@@ -38,3 +38,10 @@ executing `asset-lint`, then it couldn't be simpler:
 ```
 asset-lint
 ```
+
+## Try it yourself
+In this repo, there are a copy of the same image in the asset folder.
+You can run `asset-lint` against that folder to see live in action.
+```
+.\target\debug\asset-lint.exe --assets-path ./assets/ --no-placeholders asset.* --no-duplicates --max-size 1024
+```
