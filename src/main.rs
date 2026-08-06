@@ -35,7 +35,7 @@ struct Args {
     #[arg(long)]
     max_size: Option<u64>,
 
-    /// Cehck for placeholder assets
+    /// Check for placeholder assets
     #[arg(long)]
     no_placeholders: Vec<String>,
 
