@@ -27,6 +27,8 @@ impl Checker for MaxSizeCheck {
                         &asset.path, asset.size, self.max_size
                     ),
                     locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
+                    rule_id: 2,
+                    rule_name: String::from("max-size-checker"),
                 });
             }
         }

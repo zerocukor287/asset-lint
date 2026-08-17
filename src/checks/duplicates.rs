@@ -47,6 +47,8 @@ impl Checker for DuplicateChecker {
                                     .into_string()
                                     .unwrap(),
                             ],
+                            rule_id: 1,
+                            rule_name: String::from("duplicate-checker"),
                         });
                     }
                 }

@@ -45,8 +45,8 @@ impl LintOutput for SarifOutput {
 
             results.push(
                 Result::builder()
-                    .rule_id("Duplicates")
-                    .rule_index(1)
+                    .rule_id(&item.rule_name)
+                    .rule_index(item.rule_id)
                     .message(&item.text)
                     .level(ResultLevel::Warning)
                     .locations(locations)
