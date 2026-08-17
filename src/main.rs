@@ -14,6 +14,7 @@ use crate::checks::max_size::MaxSizeCheck;
 use crate::checks::placeholders::PlaceholderChecker;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
+use crate::output::sarif::SarifOutput;
 
 mod asset_list;
 mod checks;
@@ -46,6 +47,10 @@ struct Args {
     /// Minimal console output
     #[arg(long, default_value_t = false)]
     quiet: bool,
+
+    /// SARIF output
+    #[arg(long, default_value_t = false)]
+    sarif: bool,
 
     /// Path to export naive `asset_lint_list.json`
     #[arg(long)]
@@ -86,16 +91,21 @@ fn main() -> ExitCode {
         lint_result.append(&mut checker.check(&assets));
     }
 
-    // print the results
+    // instantiate the outputs
     let mut printers: Vec<Box<dyn LintOutput>> = Vec::new();
     if !args.quiet {
         printers.push(Box::new(ConsoleOutput {}));
     }
+    if args.sarif {
+        printers.push(Box::new(SarifOutput {}));
+    }
 
+    // print the results
     for output in printers.iter_mut() {
         output.print_result(&lint_result);
     }
 
+    // export the naive asset list for future use
     if let Some(export_path) = args.export_asset_list {
         export_asset_list(export_path, &assets);
     }

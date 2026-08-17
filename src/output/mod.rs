@@ -5,6 +5,7 @@
 use crate::checks::LintItem;
 
 pub(crate) mod console;
+pub(crate) mod sarif;
 
 /// Each output adapter needs to implement `LintOutput` trait.
 /// The implementors not allowed to change the `LintItem` span,
