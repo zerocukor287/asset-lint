@@ -3,7 +3,10 @@
 use std::fs::File;
 
 use log::error;
-use serde_sarif::sarif::{Result, ResultLevel, Run, Sarif, ToolComponent, Version};
+use serde_sarif::sarif::{
+    ArtifactLocation, Location, PhysicalLocation, Result, ResultLevel, Run, Sarif, ToolComponent,
+    Version,
+};
 
 use crate::output::LintOutput;
 pub struct SarifOutput {}
@@ -27,12 +30,26 @@ impl LintOutput for SarifOutput {
         // iterate over the lint assets, and report as a results
         let mut results: Vec<Result> = Vec::new();
         for item in lint_items {
+            let mut locations: Vec<Location> = Vec::new();
+            for path in &item.locations {
+                locations.push(
+                    Location::builder()
+                        .physical_location(
+                            PhysicalLocation::builder()
+                                .artifact_location(ArtifactLocation::builder().uri(path).build())
+                                .build(),
+                        )
+                        .build(),
+                );
+            }
+
             results.push(
                 Result::builder()
                     .rule_id("Duplicates")
                     .rule_index(1)
                     .message(&item.text)
                     .level(ResultLevel::Warning)
+                    .locations(locations)
                     .build(),
             );
         }

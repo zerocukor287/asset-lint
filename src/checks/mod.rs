@@ -17,4 +17,5 @@ pub trait Checker {
 
 pub struct LintItem {
     pub text: String,
+    pub locations: Vec<String>,
 }

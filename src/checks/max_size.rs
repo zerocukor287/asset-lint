@@ -24,8 +24,9 @@ impl Checker for MaxSizeCheck {
                 result.push(LintItem {
                     text: format!(
                         "Too big asset: {:?} size of {} bytes exceeds {} bytes",
-                        asset.path, asset.size, self.max_size
+                        &asset.path, asset.size, self.max_size
                     ),
+                    locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
                 });
             }
         }

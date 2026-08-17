@@ -39,6 +39,7 @@ impl Checker for PlaceholderChecker {
                 {
                     result.push(LintItem {
                         text: format!("Found placeholder asset: {:?}", asset.path),
+                        locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
                     });
                     // continue with the next asset
                     break;

@@ -33,6 +33,20 @@ impl Checker for DuplicateChecker {
                                 "Duplicated assets: {:?} and {:?}",
                                 assets[i].path, assets[j].path
                             ),
+                            locations: vec![
+                                assets[i]
+                                    .path
+                                    .clone()
+                                    .into_os_string()
+                                    .into_string()
+                                    .unwrap(),
+                                assets[j]
+                                    .path
+                                    .clone()
+                                    .into_os_string()
+                                    .into_string()
+                                    .unwrap(),
+                            ],
                         });
                     }
                 }
