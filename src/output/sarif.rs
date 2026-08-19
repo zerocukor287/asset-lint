@@ -8,12 +8,19 @@ use serde_sarif::sarif::{
     Version,
 };
 
-use crate::output::LintOutput;
+use crate::{
+    checks::{Checker, Severity},
+    output::{LintOutput, lookup_checker},
+};
 pub struct SarifOutput {}
 
 /// Implement saving the `LintItem`s into a sarif file.
 impl LintOutput for SarifOutput {
-    fn print_result(&mut self, lint_items: &[crate::checks::LintItem]) {
+    fn print_result(
+        &mut self,
+        lint_items: &[crate::checks::LintItem],
+        active_checkers: &[Box<dyn Checker>],
+    ) {
         println!("Generating 'asset-lint.sarif' file");
 
         // create basic structure
@@ -30,6 +37,10 @@ impl LintOutput for SarifOutput {
         // iterate over the lint assets, and report as a results
         let mut results: Vec<Result> = Vec::new();
         for item in lint_items {
+            // find corresponding rule
+            let checker = lookup_checker(item, active_checkers);
+
+            // build location array
             let mut locations: Vec<Location> = Vec::new();
             for path in &item.locations {
                 locations.push(
@@ -43,15 +54,23 @@ impl LintOutput for SarifOutput {
                 );
             }
 
-            results.push(
-                Result::builder()
-                    .rule_id(&item.rule_name)
-                    .rule_index(item.rule_id)
-                    .message(&item.text)
-                    .level(ResultLevel::Warning)
-                    .locations(locations)
-                    .build(),
-            );
+            // serialize finding
+            if let Some(rule) = checker {
+                results.push(
+                    Result::builder()
+                        .rule_id(rule.rule_name())
+                        .rule_index(item.rule_id)
+                        .message(&item.text)
+                        .level(rule.severity())
+                        .locations(locations)
+                        .build(),
+                );
+            } else {
+                error!(
+                    "Internal error: No matching rule for rule id {}",
+                    item.rule_id
+                );
+            }
         }
 
         // add results if not empty
@@ -69,6 +88,18 @@ impl LintOutput for SarifOutput {
             }
         } else {
             error!("Couldn't open sarif file");
+        }
+    }
+}
+
+/// Covert Severity to Sarif output
+impl From<Severity> for ResultLevel {
+    fn from(value: Severity) -> Self {
+        match value {
+            Severity::None => ResultLevel::None,
+            Severity::Info => ResultLevel::Note,
+            Severity::Warning => ResultLevel::Warning,
+            Severity::Error => ResultLevel::Error,
         }
     }
 }

@@ -5,7 +5,7 @@ use regex::Regex;
 
 use crate::{
     asset_list::AssetItem,
-    checks::{Checker, LintItem},
+    checks::{Checker, LintItem, Severity},
 };
 
 pub struct PlaceholderChecker {
@@ -26,6 +26,16 @@ impl PlaceholderChecker {
 }
 
 impl Checker for PlaceholderChecker {
+    fn rule_id(&self) -> i64 {
+        1030
+    }
+    fn rule_name(&self) -> String {
+        String::from("placeholder-checker")
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
+
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
         debug!("Found {} regex patterns", self.patterns.len());
@@ -40,8 +50,7 @@ impl Checker for PlaceholderChecker {
                     result.push(LintItem {
                         text: format!("Found placeholder asset: {:?}", asset.path),
                         locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
-                        rule_id: 3,
-                        rule_name: String::from("placeholder-checker"),
+                        rule_id: self.rule_id(),
                     });
                     // continue with the next asset
                     break;

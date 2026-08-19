@@ -102,7 +102,7 @@ fn main() -> ExitCode {
 
     // print the results
     for output in printers.iter_mut() {
-        output.print_result(&lint_result);
+        output.print_result(&lint_result, &checkers);
     }
 
     // export the naive asset list for future use
