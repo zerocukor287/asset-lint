@@ -20,7 +20,7 @@ mod asset_list;
 mod checks;
 mod output;
 
-// minimum required `asser_lint_list.json` version
+// minimum required `asset_lint_list.json` version
 const MINIMUM_ASSET_LIST_VERSION: u32 = 1;
 
 /// Structure to define the possible command line parameters
