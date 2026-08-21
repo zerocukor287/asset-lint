@@ -20,8 +20,9 @@ to the `--no-placeholder` pattern list.
 
 ## Constant quality gate - Integrate in CI
 Quality first, integrate `asset-lint` into your pipeline.
-With industry wide structured `.json` report, it works well with most
-major CI providers.
+With industry wide [SARIF](https://sarifweb.azurewebsites.net/) report,
+it works out of the box with most major CI providers.  
+Just add the `--sarif` flag to the calling arguments.
 
 ## Cross-Engine, Cross-platform
 By using the `asset_lint_list.json` format, `asset-lint` can work with Bevy,
