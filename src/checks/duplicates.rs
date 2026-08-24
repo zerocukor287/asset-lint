@@ -2,7 +2,7 @@
 
 use crate::{
     asset_list::AssetItem,
-    checks::{Checker, LintItem},
+    checks::{Checker, LintItem, Severity},
 };
 
 pub struct DuplicateChecker {}
@@ -16,6 +16,16 @@ impl DuplicateChecker {
 /// Implementation of the `Checker` trait for finding duplicates.
 /// It finds duplicates based on the hash of the file content.
 impl Checker for DuplicateChecker {
+    fn rule_id(&self) -> i64 {
+        1001
+    }
+    fn rule_name(&self) -> String {
+        String::from("duplicate-checker")
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
+
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
 
@@ -33,6 +43,21 @@ impl Checker for DuplicateChecker {
                                 "Duplicated assets: {:?} and {:?}",
                                 assets[i].path, assets[j].path
                             ),
+                            locations: vec![
+                                assets[i]
+                                    .path
+                                    .clone()
+                                    .into_os_string()
+                                    .into_string()
+                                    .unwrap(),
+                                assets[j]
+                                    .path
+                                    .clone()
+                                    .into_os_string()
+                                    .into_string()
+                                    .unwrap(),
+                            ],
+                            rule_id: self.rule_id(),
                         });
                     }
                 }

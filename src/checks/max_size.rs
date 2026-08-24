@@ -1,6 +1,9 @@
 //! Checks the assets and lists which one exceeds the defined size
 
-use crate::{asset_list::AssetItem, checks::Checker};
+use crate::{
+    asset_list::AssetItem,
+    checks::{Checker, Severity},
+};
 
 use super::LintItem;
 
@@ -17,6 +20,15 @@ impl MaxSizeCheck {
 /// Implementation of the `Checker` trait for finding huge files.
 /// Notifies if an asset is bigger than the defined margin.
 impl Checker for MaxSizeCheck {
+    fn rule_id(&self) -> i64 {
+        1020
+    }
+    fn rule_name(&self) -> String {
+        String::from("max-size-checker")
+    }
+    fn severity(&self) -> Severity {
+        Severity::Warning
+    }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
         for asset in assets {
@@ -26,6 +38,8 @@ impl Checker for MaxSizeCheck {
                         "Too big asset: {:?} size of {} bytes exceeds {} bytes",
                         asset.path, asset.size, self.max_size
                     ),
+                    locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
+                    rule_id: self.rule_id(),
                 });
             }
         }

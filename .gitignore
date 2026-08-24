@@ -1,3 +1,4 @@
 /target
 .vscode/
 .ideas.md
+asset-lint.sarif

@@ -29,7 +29,7 @@ pub fn read_or_build_asset_list(root: Option<String>) -> Vec<AssetItem> {
                             path: path.clone().into_path(),
                             asset_type: guess_type(path.path()),
                             size: path.metadata().unwrap().len(),
-                            hash: claculate_hash(path.path()),
+                            hash: calculate_hash(path.path()),
                         });
                     }
                 }
@@ -50,7 +50,7 @@ pub fn read_or_build_asset_list(root: Option<String>) -> Vec<AssetItem> {
 }
 
 // reads the file in 64 KB chunks, and calculates a hash for it
-fn claculate_hash(path: &Path) -> [u8; 32] {
+fn calculate_hash(path: &Path) -> [u8; 32] {
     let mut hasher = blake3::Hasher::new();
 
     if let Ok(file) = File::open(path) {
