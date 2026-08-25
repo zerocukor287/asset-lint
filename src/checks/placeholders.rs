@@ -40,21 +40,16 @@ impl Checker for PlaceholderChecker {
         let mut result: Vec<LintItem> = Vec::new();
         debug!("Found {} regex patterns", self.patterns.len());
         for asset in assets {
-            for path_part in asset.path.iter() {
-                debug!("Checking {}", path_part.to_string_lossy());
-                if self
-                    .patterns
-                    .iter()
-                    .any(|p| p.is_match(&path_part.to_string_lossy()))
-                {
-                    result.push(LintItem {
-                        text: format!("Found placeholder asset: {:?}", asset.path),
-                        locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
-                        rule_id: self.rule_id(),
-                    });
-                    // continue with the next asset
-                    break;
-                }
+            let path_part = asset.path.to_string_lossy();
+            debug!("Checking {}", path_part);
+            if self.patterns.iter().any(|p| p.is_match(&path_part)) {
+                result.push(LintItem {
+                    text: format!("Found placeholder asset: {:?}", asset.path),
+                    locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
+                    rule_id: self.rule_id(),
+                });
+                // continue with the next asset
+                break;
             }
         }
 
