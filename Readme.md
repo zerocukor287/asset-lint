@@ -10,9 +10,13 @@ binary content, but different name, or path.
 With `--max-size [size]` it enforces that none of the assets go live
 unoptimized.
 
-## No more placeholders
+## No more placeholders, debug libraries or intermediate files
 With `--no-placeholder` flag, `asset-lint` will warn if any of your assets matches
-the placeholder patterns.
+the placeholder patterns.  
+Example that filters debug version files, raw files, and placeholder images:
+```
+asset-lint --no-placeholders ".*debug.*" ".*.psd" ".*temp.*.png"
+```
 
 > [!TIP]
 When working on a new feature that you don't want to leak, add that pattern
