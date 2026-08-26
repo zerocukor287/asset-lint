@@ -47,6 +47,7 @@ impl Checker for PlaceholderChecker {
                     text: format!("Found placeholder asset: {:?}", asset.path),
                     locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
                     rule_id: self.rule_id(),
+                    releasable_size: 0, // don't know what to do with the placeholder
                 });
                 // continue with the next asset
                 break;

@@ -32,4 +32,5 @@ pub struct LintItem {
     pub text: String,
     pub rule_id: i64, // this is the unique ID of the rule, used for looking up severity, name etc.
     pub locations: Vec<String>,
+    pub releasable_size: u64, // this is the space that could be freed up by solving this finding
 }

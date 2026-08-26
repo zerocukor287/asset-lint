@@ -40,6 +40,7 @@ impl Checker for MaxSizeCheck {
                     ),
                     locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
                     rule_id: self.rule_id(),
+                    releasable_size: asset.size - self.max_size, // limit to max size
                 });
             }
         }
