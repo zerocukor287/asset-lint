@@ -1,6 +1,9 @@
 //! Asset-lint keeps your game assets neat and tidy.
 //!
 //! Command line tool to find and fix common problems with your game assets.
+//! 
+//! This documentation meant to be read by developers, or enthusiast to understand the inner workings of the tool.  
+//! Usage guide can be found in the [Repository](https://github.com/zerocukor287/asset-lint) or in the [wiki](https://github.com/zerocukor287/asset-lint/wiki)
 
 use clap::Parser;
 use std::process::ExitCode;
