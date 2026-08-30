@@ -16,9 +16,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+
     - name: Build
       run: cargo build --verbose
+    
     - name: Clippy
       run: cargo clippy -- -Wwarnings
-    - name: Run tests
-      run: cargo test --verbose
+    
+    - name: Run tests & Generate LCOV report
+      run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: lcov.info
