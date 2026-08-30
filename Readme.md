@@ -35,18 +35,15 @@ Godot, Unity, or other game engines.
 # Documentation
 Calling Asset Lint requires only the path to your asset folder
 ```
-asset-lint --assets-path ./assets/ --no-duplicated-names
+asset-lint --assets-path ./assets/ --no-duplicates
 ```
 or if you already have an `asset_lint_list.json` in the folder you're executing
 `asset-lint`, it is as simple as:
 ```
-asset-lint --no-duplicated-names
+asset-lint --no-duplicates
 ```
-even simpler, if you have an `.asset-lint.toml` file in the folder you're
-executing `asset-lint`, then it couldn't be simpler:
-```
-asset-lint
-```
+
+More info of the usage can be found on the [Wiki page](https://github.com/zerocukor287/asset-lint/wiki)
 
 ## Try it yourself
 In this repo, there are a copy of the same image in the asset folder.
@@ -72,7 +69,7 @@ the measurement for you.
             "hash": [1,2,4,201,87,,,, 123] // required since version 1
         },
         {
-            "path": "C:/MyGame/assets/icon.ico",
+            "path": "C:/MyGame/assets/icon_2.ico",
             "asset_type": "Image",
             "size": 3786,
             "hash": [1,2,4,201,87,,,, 123]
@@ -85,12 +82,11 @@ The `minimum-version` defines the required fields in the file, and the
 `current-version` defines what kind of checks can be run on that file.
 `minimum-version` is always less-or-equal to the `current-version`
 
-Version table of the `asset-lint-list` and the possible checks:
+Version table of the `asset-lint-list` file and the possible checks:
 
 |version| supported features|
 |---|---|
 | 1 | Duplicate check, max size check, placeholder check |
-| 2 | Unused check |
 
 ### Correlation between version numbers
 `asset-lint` uses semantic versioning:
