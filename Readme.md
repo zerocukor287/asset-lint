@@ -5,6 +5,7 @@ Find and fix problems in your assets.
 `Asset Lint` statically analyzes the asset folder to find common problems.
 
 ![Build status](https://github.com/zerocukor287/asset-lint/actions/workflows/rust.yml/badge.svg)
+![Crates.io](https://img.shields.io/crates/v/asset-lint.svg)
 
 ## Reduce the size of the shipped game
 With the `--no-duplicates` flag, `asset-lint` finds assets with same
