@@ -58,6 +58,7 @@ impl Checker for DuplicateChecker {
                                     .unwrap(),
                             ],
                             rule_id: self.rule_id(),
+                            releasable_size: assets[j].size,
                         });
                     }
                 }

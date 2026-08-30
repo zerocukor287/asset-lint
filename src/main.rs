@@ -110,5 +110,9 @@ fn main() -> ExitCode {
         export_asset_list(export_path, &assets);
     }
 
-    ExitCode::SUCCESS
+    if lint_result.is_empty() {
+        ExitCode::SUCCESS
+    } else {
+        ExitCode::FAILURE
+    }
 }
