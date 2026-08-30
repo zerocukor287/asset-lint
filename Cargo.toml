@@ -4,9 +4,12 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/zerocukor287/asset-lint"
-# If I set up a "github pages" I should change this
 homepage = "https://github.com/zerocukor287/asset-lint"
+documentation = "https://docs.rs/asset-lint"
 description = "CLI tool to find common problems with assets during game development"
+readme = "Readme.md"
+categories = ["command-line-utilities", "game-development"]
+keywords = ["gamedev", "assets", "linter"]
 
 [dependencies]
 clap_derive = "4.6.3"
