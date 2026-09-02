@@ -8,6 +8,9 @@ pub struct TomlConfig {
     /// Check for duplicate files
     pub no_duplicates: Option<bool>,
 
+    /// Check for long asset paths
+    pub max_filename_length: Option<u64>,
+
     /// Check for too big assets
     pub max_size: Option<u64>,
 

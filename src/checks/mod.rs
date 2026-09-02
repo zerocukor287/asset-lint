@@ -1,6 +1,7 @@
 //! This module holds all the logic behind the different checks
 
 pub(crate) mod duplicates;
+pub(crate) mod file_path_length;
 pub(crate) mod max_size;
 pub(crate) mod max_total_size;
 pub(crate) mod placeholders;

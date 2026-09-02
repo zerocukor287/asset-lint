@@ -5,6 +5,9 @@ assets_path = "./"
 # check for duplicates
 no_duplicates = true
 
+# check for long file names
+max_filename_length = 512
+
 # 200 MB file limit
 max_size = 209715200
 
@@ -21,4 +24,4 @@ quiet = false
 sarif = false
 
 # export asset-list
-export_asset_list = "./asset-lint-list.json"
+# export_asset_list = "./asset-lint-list.json"

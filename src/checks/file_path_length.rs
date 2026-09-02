@@ -2,48 +2,55 @@ use crate::{
     asset_list::AssetItem,
     checks::{Checker, LintItem, Severity},
 };
-use human_bytes::human_bytes;
 
-pub(crate) struct MaxTotalSizeCheck {
+pub(crate) struct FilePathLengthCheck {
     max_size: u64,
 }
 
-impl MaxTotalSizeCheck {
-    pub fn new(max_size: u64) -> MaxTotalSizeCheck {
-        println!("Checking if all the assets exceeds {} bytes", max_size);
-        MaxTotalSizeCheck { max_size }
+impl FilePathLengthCheck {
+    pub fn new(max_size: u64) -> FilePathLengthCheck {
+        println!(
+            "Checking for asset paths longer than {} character",
+            max_size
+        );
+        FilePathLengthCheck { max_size }
     }
 }
 
-/// Implementation of the `Checker` trait to check if the total size is below the margin.
-/// Notifies if the size of all asset is bigger than the defined margin.
-impl Checker for MaxTotalSizeCheck {
+/// Implementation of the `Checker` trait to check the length of the asset's path
+/// Creates a notification for every asset whose path is longer than the margin.
+impl Checker for FilePathLengthCheck {
     fn rule_id(&self) -> i64 {
-        1040
+        1050
     }
     fn rule_name(&self) -> String {
-        String::from("max-total-size-checker")
+        String::from("file-path-length-checker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning
     }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
-        let total_size: u64 = assets.iter().map(|item| item.size).sum();
-        if total_size > self.max_size {
-            vec![LintItem {
-                text: format!(
-                    "The total size of assets {} exceeding the limit of {}. Assets need to be reduced by {}",
-                    total_size,
-                    self.max_size,
-                    human_bytes((total_size - self.max_size) as f64)
-                ),
-                rule_id: self.rule_id(),
-                locations: Vec::new(),
-                releasable_size: 0, // keep it 0 now.
-            }]
-        } else {
-            Vec::new()
+        let mut result: Vec<LintItem> = Vec::new();
+
+        for asset in assets {
+            if let Ok(path_part) = asset.path.clone().into_os_string().into_string() {
+                if path_part.len() > self.max_size as usize {
+                    result.push(LintItem {
+                        text: format!(
+                            "Asset path is too long, {} exceeds the maximum of {} for asset:\n{:?}",
+                            path_part.len(),
+                            self.max_size,
+                            asset.path
+                        ),
+                        locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
+                        rule_id: self.rule_id(),
+                        releasable_size: 0, // size stays, path shrinks
+                    });
+                }
+            }
         }
+
+        result
     }
 }
 
@@ -56,7 +63,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_total_size_greater() {
+    fn test_path_length_greater() {
         let assets = vec![
             AssetItem {
                 path: PathBuf::from("temp/temp_anim/hero_temp.png"),
@@ -78,11 +85,11 @@ mod test {
             },
         ];
 
-        let mut checker = MaxTotalSizeCheck::new(2048);
+        let mut checker = FilePathLengthCheck::new(30);
 
         let result = checker.check(&assets);
 
-        // generated one result, because 1024 + 1234 > 2048
+        // generated one result
         assert_eq!(result.len(), 1);
     }
 
@@ -104,13 +111,13 @@ mod test {
             AssetItem {
                 path: PathBuf::from("assets/game.exe"),
                 asset_type: AssetType::Unknown,
-                size: 67108864, // 64 MB
+                size: 12345678,
                 hash: [2; 32],
             },
         ];
 
-        // checker of 500 MB
-        let mut checker = MaxTotalSizeCheck::new(524288000);
+        // checker for 240 char in path
+        let mut checker = FilePathLengthCheck::new(240);
 
         let result = checker.check(&assets);
 

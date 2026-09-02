@@ -12,6 +12,7 @@ use crate::asset_list::exporter::export_asset_list;
 use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
+use crate::checks::file_path_length::FilePathLengthCheck;
 use crate::checks::max_size::MaxSizeCheck;
 use crate::checks::max_total_size::MaxTotalSizeCheck;
 use crate::checks::placeholders::PlaceholderChecker;
@@ -82,24 +83,20 @@ fn create_checkers(config: &Config) -> Vec<Box<dyn Checker>> {
     let mut checkers: Vec<Box<dyn Checker>> = Vec::new();
     if config.no_duplicates {
         checkers.push(Box::new(DuplicateChecker::new()));
-        println!("Checking for duplicates");
+    }
+    if let Some(max_filename_length) = config.max_filename_length {
+        checkers.push(Box::new(FilePathLengthCheck::new(max_filename_length)));
     }
     if let Some(max_size) = config.max_size {
         checkers.push(Box::new(MaxSizeCheck::new(max_size)));
-        println!("Checking for assets bigger than {} bytes", max_size);
     }
     if let Some(max_total_size) = config.max_total_size {
         checkers.push(Box::new(MaxTotalSizeCheck::new(max_total_size)));
-        println!(
-            "Checking if all the assets exceeds {} bytes",
-            max_total_size
-        );
     }
     if !config.no_placeholders.is_empty() {
         checkers.push(Box::new(PlaceholderChecker::new(
             config.no_placeholders.clone(),
         )));
-        println!("Checking for placeholder assets");
     }
 
     checkers
@@ -114,6 +111,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: false,
+            max_filename_length: None,
             max_size: None,
             max_total_size: None,
             no_placeholders: Vec::new(),
@@ -131,6 +129,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: true,
+            max_filename_length: None,
             max_size: None,
             max_total_size: Some(4),
             no_placeholders: Vec::new(),
@@ -148,6 +147,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: true,
+            max_filename_length: Some(123),
             max_size: Some(1),
             max_total_size: Some(4),
             no_placeholders: vec!["temp".to_string()],
@@ -157,6 +157,6 @@ mod test {
         };
 
         let checkers = create_checkers(&config);
-        assert_eq!(checkers.len(), 4);
+        assert_eq!(checkers.len(), 5);
     }
 }
