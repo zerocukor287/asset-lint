@@ -18,10 +18,10 @@ impl MaxTotalSizeCheck {
 /// Notifies if the size of all asset is bigger than the defined margin.
 impl Checker for MaxTotalSizeCheck {
     fn rule_id(&self) -> i64 {
-        1030
+        1040
     }
     fn rule_name(&self) -> String {
-        String::from("max-size-checker")
+        String::from("max-total-size-checker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning
