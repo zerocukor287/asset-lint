@@ -44,6 +44,7 @@ impl Config {
     }
 }
 
+/// Creates config from the arguments, or the asset-lint.toml file
 pub fn create_config() -> Config {
     let args = Args::parse();
     if let Ok(toml_content) = std::fs::read_to_string("./asset-lint.toml") {
@@ -59,5 +60,56 @@ pub fn create_config() -> Config {
         quiet: false,
         sarif: false,
         export_asset_list: None,
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    // It might be not the best test, as we could accidentally put
+    // an asset-lint.toml file in the folder
+    #[test]
+    fn test_empty_config_creation() {
+        let config = create_config();
+
+        assert!(config.assets_path.is_none());
+        assert!(config.no_duplicates == false);
+        assert!(config.max_size.is_none());
+        assert!(config.no_placeholders.is_empty());
+        assert!(config.quiet == false);
+        assert!(config.sarif == false);
+        assert!(config.export_asset_list.is_none());
+    }
+
+    #[test]
+    fn test_resolve() {
+        let args = Args {
+            assets_path: Some("./assets/".to_string()),
+            no_duplicates: true,
+            max_size: None,
+            no_placeholders: Some(vec![".*".to_string(), ".*.psd".to_string()]),
+            quiet: false,
+            sarif: true,
+            export_asset_list: Some("./asset-lint-list.json".to_string()),
+        };
+        let toml = TomlConfig {
+            assets_path: None,
+            no_duplicates: Some(false),
+            max_size: Some(14),
+            no_placeholders: None,
+            quiet: Some(true),
+            sarif: Some(false),
+            export_asset_list: None,
+        };
+        let config = Config::resolve(args, toml);
+
+        assert!(config.assets_path.is_some()); // from arg
+        assert!(config.no_duplicates); // from arg
+        assert!(config.max_size.is_some()); // from toml
+        assert!(config.no_placeholders.len() > 1); // from arg
+        assert!(config.quiet); // from toml
+        assert!(config.sarif); // from arg
+        assert!(config.export_asset_list.is_some()); // from arg
     }
 }
