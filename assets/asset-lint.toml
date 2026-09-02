@@ -1,0 +1,21 @@
+# settings example
+
+assets_path = "./"
+
+# check for duplicates
+no_duplicates = true
+
+# 200 MB file limit
+max_size = 209715200
+
+# search for psd files, or debug files
+no_placeholders = [".*.psd", ".*[Dd]ebug.*"]
+
+# print to console
+quiet = false
+
+# generate SARIF output
+sarif = false
+
+# export asset-list
+export_asset_list = "./asset-lint-list.json"

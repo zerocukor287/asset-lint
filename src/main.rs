@@ -1,11 +1,10 @@
 //! Asset-lint keeps your game assets neat and tidy.
 //!
 //! Command line tool to find and fix common problems with your game assets.
-//! 
+//!
 //! This documentation meant to be read by developers, or enthusiast to understand the inner workings of the tool.  
 //! Usage guide can be found in the [Repository](https://github.com/zerocukor287/asset-lint) or in the [wiki](https://github.com/zerocukor287/asset-lint/wiki)
 
-use clap::Parser;
 use std::process::ExitCode;
 
 use crate::asset_list::builder::read_or_build_asset_list;
@@ -18,66 +17,34 @@ use crate::checks::placeholders::PlaceholderChecker;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
 use crate::output::sarif::SarifOutput;
+use crate::settings::config::create_config;
 
 mod asset_list;
 mod checks;
 mod output;
+mod settings;
 
 // minimum required `asset_lint_list.json` version
 const MINIMUM_ASSET_LIST_VERSION: u32 = 1;
-
-/// Structure to define the possible command line parameters
-#[derive(Parser, Debug)]
-#[command(name = "asset-lint")]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// Path to check
-    #[arg(long)]
-    assets_path: Option<String>,
-
-    /// Check for duplicate files
-    #[arg(long, action = clap::ArgAction::SetTrue)]
-    no_duplicates: bool,
-
-    /// Check for too big assets
-    #[arg(long)]
-    max_size: Option<u64>,
-
-    /// Check for placeholder assets
-    #[arg(long)]
-    no_placeholders: Vec<String>,
-
-    /// Minimal console output
-    #[arg(long, default_value_t = false)]
-    quiet: bool,
-
-    /// SARIF output
-    #[arg(long, default_value_t = false)]
-    sarif: bool,
-
-    /// Path to export naive `asset_lint_list.json`
-    #[arg(long)]
-    export_asset_list: Option<String>,
-}
 
 /// Entry point of the application.
 /// Call it like `asset-lint --help` to see the possible usage
 fn main() -> ExitCode {
     env_logger::init();
-    let args = Args::parse();
+    let config = create_config();
 
     // instantiate checkers
     let mut checkers: Vec<Box<dyn Checker>> = Vec::new();
-    if args.no_duplicates {
+    if config.no_duplicates {
         checkers.push(Box::new(DuplicateChecker::new()));
         println!("Checking for duplicates");
     }
-    if let Some(max_size) = args.max_size {
+    if let Some(max_size) = config.max_size {
         checkers.push(Box::new(MaxSizeCheck::new(max_size)));
         println!("Checking for assets bigger than {} bytes", max_size);
     }
-    if !args.no_placeholders.is_empty() {
-        checkers.push(Box::new(PlaceholderChecker::new(args.no_placeholders)));
+    if !config.no_placeholders.is_empty() {
+        checkers.push(Box::new(PlaceholderChecker::new(config.no_placeholders)));
         println!("Checking for placeholder assets");
     }
 
@@ -86,7 +53,7 @@ fn main() -> ExitCode {
     }
 
     // get the asset list
-    let assets = read_or_build_asset_list(args.assets_path);
+    let assets = read_or_build_asset_list(config.assets_path);
 
     // do the checks
     let mut lint_result: Vec<LintItem> = Vec::new();
@@ -96,10 +63,10 @@ fn main() -> ExitCode {
 
     // instantiate the outputs
     let mut printers: Vec<Box<dyn LintOutput>> = Vec::new();
-    if !args.quiet {
+    if !config.quiet {
         printers.push(Box::new(ConsoleOutput {}));
     }
-    if args.sarif {
+    if config.sarif {
         printers.push(Box::new(SarifOutput {}));
     }
 
@@ -109,7 +76,7 @@ fn main() -> ExitCode {
     }
 
     // export the naive asset list for future use
-    if let Some(export_path) = args.export_asset_list {
+    if let Some(export_path) = config.export_asset_list {
         export_asset_list(export_path, &assets);
     }
 
