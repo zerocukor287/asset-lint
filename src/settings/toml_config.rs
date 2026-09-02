@@ -11,6 +11,9 @@ pub struct TomlConfig {
     /// Check for too big assets
     pub max_size: Option<u64>,
 
+    /// Check for total size of all assets combined
+    pub max_total_size: Option<u64>,
+
     /// Check for placeholder assets
     pub no_placeholders: Option<Vec<String>>,
 

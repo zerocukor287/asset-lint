@@ -13,6 +13,9 @@ pub struct Config {
     /// Check for too big assets
     pub max_size: Option<u64>,
 
+    /// Check for total size of all assets combined
+    pub max_total_size: Option<u64>,
+
     /// Check for placeholder assets
     pub no_placeholders: Vec<String>,
 
@@ -34,6 +37,7 @@ impl Config {
             assets_path: args.assets_path.or(toml.assets_path),
             no_duplicates: args.no_duplicates || toml.no_duplicates.is_some_and(|val| val),
             max_size: args.max_size.or(toml.max_size),
+            max_total_size: args.max_total_size.or(toml.max_total_size),
             no_placeholders: args
                 .no_placeholders
                 .unwrap_or(toml.no_placeholders.unwrap_or_default()),
@@ -56,6 +60,7 @@ pub fn create_config() -> Config {
         assets_path: None,
         no_duplicates: false,
         max_size: None,
+        max_total_size: None,
         no_placeholders: Vec::new(),
         quiet: false,
         sarif: false,
@@ -76,6 +81,7 @@ mod test {
         assert!(config.assets_path.is_none());
         assert!(config.no_duplicates == false);
         assert!(config.max_size.is_none());
+        assert!(config.max_total_size.is_none());
         assert!(config.no_placeholders.is_empty());
         assert!(config.quiet == false);
         assert!(config.sarif == false);
@@ -88,6 +94,7 @@ mod test {
             assets_path: Some("./assets/".to_string()),
             no_duplicates: true,
             max_size: None,
+            max_total_size: Some(1234),
             no_placeholders: Some(vec![".*".to_string(), ".*.psd".to_string()]),
             quiet: false,
             sarif: true,
@@ -97,6 +104,7 @@ mod test {
             assets_path: None,
             no_duplicates: Some(false),
             max_size: Some(14),
+            max_total_size: None,
             no_placeholders: None,
             quiet: Some(true),
             sarif: Some(false),
@@ -107,6 +115,7 @@ mod test {
         assert!(config.assets_path.is_some()); // from arg
         assert!(config.no_duplicates); // from arg
         assert!(config.max_size.is_some()); // from toml
+        assert!(config.max_total_size.is_some()); // from arg
         assert!(config.no_placeholders.len() > 1); // from arg
         assert!(config.quiet); // from toml
         assert!(config.sarif); // from arg

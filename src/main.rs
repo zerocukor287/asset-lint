@@ -13,10 +13,12 @@ use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
 use crate::checks::max_size::MaxSizeCheck;
+use crate::checks::max_total_size::MaxTotalSizeCheck;
 use crate::checks::placeholders::PlaceholderChecker;
 use crate::output::LintOutput;
 use crate::output::console::ConsoleOutput;
 use crate::output::sarif::SarifOutput;
+use crate::settings::config::Config;
 use crate::settings::config::create_config;
 
 mod asset_list;
@@ -34,20 +36,9 @@ fn main() -> ExitCode {
     let config = create_config();
 
     // instantiate checkers
-    let mut checkers: Vec<Box<dyn Checker>> = Vec::new();
-    if config.no_duplicates {
-        checkers.push(Box::new(DuplicateChecker::new()));
-        println!("Checking for duplicates");
-    }
-    if let Some(max_size) = config.max_size {
-        checkers.push(Box::new(MaxSizeCheck::new(max_size)));
-        println!("Checking for assets bigger than {} bytes", max_size);
-    }
-    if !config.no_placeholders.is_empty() {
-        checkers.push(Box::new(PlaceholderChecker::new(config.no_placeholders)));
-        println!("Checking for placeholder assets");
-    }
+    let mut checkers = create_checkers(&config);
 
+    // validate that we have more than one check
     if checkers.is_empty() {
         println!("No rules to check");
     }
@@ -84,5 +75,88 @@ fn main() -> ExitCode {
         ExitCode::SUCCESS
     } else {
         ExitCode::FAILURE
+    }
+}
+
+fn create_checkers(config: &Config) -> Vec<Box<dyn Checker>> {
+    let mut checkers: Vec<Box<dyn Checker>> = Vec::new();
+    if config.no_duplicates {
+        checkers.push(Box::new(DuplicateChecker::new()));
+        println!("Checking for duplicates");
+    }
+    if let Some(max_size) = config.max_size {
+        checkers.push(Box::new(MaxSizeCheck::new(max_size)));
+        println!("Checking for assets bigger than {} bytes", max_size);
+    }
+    if let Some(max_total_size) = config.max_total_size {
+        checkers.push(Box::new(MaxTotalSizeCheck::new(max_total_size)));
+        println!(
+            "Checking if all the assets exceeds {} bytes",
+            max_total_size
+        );
+    }
+    if !config.no_placeholders.is_empty() {
+        checkers.push(Box::new(PlaceholderChecker::new(
+            config.no_placeholders.clone(),
+        )));
+        println!("Checking for placeholder assets");
+    }
+
+    checkers
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn check_creation_test_empty() {
+        let config = Config {
+            assets_path: None,
+            no_duplicates: false,
+            max_size: None,
+            max_total_size: None,
+            no_placeholders: Vec::new(),
+            quiet: false,
+            sarif: false,
+            export_asset_list: None,
+        };
+
+        let checkers = create_checkers(&config);
+        assert!(checkers.is_empty());
+    }
+
+    #[test]
+    fn check_creation_test_half() {
+        let config = Config {
+            assets_path: None,
+            no_duplicates: true,
+            max_size: None,
+            max_total_size: Some(4),
+            no_placeholders: Vec::new(),
+            quiet: false,
+            sarif: false,
+            export_asset_list: None,
+        };
+
+        let checkers = create_checkers(&config);
+        assert_eq!(checkers.len(), 2);
+    }
+
+    #[test]
+    fn check_creation_test_all() {
+        let config = Config {
+            assets_path: None,
+            no_duplicates: true,
+            max_size: Some(1),
+            max_total_size: Some(4),
+            no_placeholders: vec!["temp".to_string()],
+            quiet: false,
+            sarif: false,
+            export_asset_list: None,
+        };
+
+        let checkers = create_checkers(&config);
+        assert_eq!(checkers.len(), 4);
     }
 }

@@ -17,6 +17,10 @@ pub struct Args {
     #[arg(long)]
     pub max_size: Option<u64>,
 
+    /// Check for total size of all assets combined
+    #[arg(long)]
+    pub max_total_size: Option<u64>,
+
     /// Check for placeholder assets
     #[arg(long)]
     pub no_placeholders: Option<Vec<String>>,

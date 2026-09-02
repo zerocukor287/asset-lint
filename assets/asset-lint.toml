@@ -8,6 +8,9 @@ no_duplicates = true
 # 200 MB file limit
 max_size = 209715200
 
+# 512 MB total size limit
+max_total_size = 536870912
+
 # search for psd files, or debug files
 no_placeholders = [".*.psd", ".*[Dd]ebug.*"]
 
