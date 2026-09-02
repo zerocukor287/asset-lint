@@ -52,6 +52,11 @@ or if you already have an `asset_lint_list.json` in the folder you're executing
 ```
 asset-lint --no-duplicates
 ```
+Simplify your life even more! With an [`asset-lint.toml`](./assets/asset-lint.toml) configuration file, no more parameters needed. Just execute
+```
+asset-lint
+```
+to run with your predefined ruleset.
 
 More info of the usage can be found on the [Wiki page](https://github.com/zerocukor287/asset-lint/wiki)
 
@@ -96,7 +101,7 @@ Version table of the `asset-lint-list` file and the possible checks:
 
 |version| supported features|
 |---|---|
-| 1 | Duplicate check, max size check, placeholder check |
+| 1 | Duplicate check, max size check, placeholder check, file name length check, file count check, total asset size check |
 
 ### Correlation between version numbers
 `asset-lint` uses semantic versioning:
