@@ -3,25 +3,22 @@ use crate::{
     checks::{Checker, LintItem, Severity},
 };
 
-pub(crate) struct FilePathLengthCheck {
+pub(crate) struct FileCountCheck {
     max_size: u64,
 }
 
-impl FilePathLengthCheck {
-    pub fn new(max_size: u64) -> FilePathLengthCheck {
-        println!(
-            "Checking for asset paths longer than {} character",
-            max_size
-        );
-        FilePathLengthCheck { max_size }
+impl FileCountCheck {
+    pub fn new(max_size: u64) -> FileCountCheck {
+        println!("Checking if the number of files is below {}", max_size);
+        FileCountCheck { max_size }
     }
 }
 
 /// Implementation of the `Checker` trait to check the length of the asset's path
 /// Creates a notification for every asset whose path is longer than the margin.
-impl Checker for FilePathLengthCheck {
+impl Checker for FileCountCheck {
     fn rule_id(&self) -> i64 {
-        1050
+        1060
     }
     fn rule_name(&self) -> String {
         String::from("file-path-length-checker")
@@ -30,27 +27,21 @@ impl Checker for FilePathLengthCheck {
         Severity::Warning
     }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
-        let mut result: Vec<LintItem> = Vec::new();
-
-        for asset in assets {
-            if let Ok(path_part) = asset.path.clone().into_os_string().into_string()
-                && path_part.len() > self.max_size as usize
-            {
-                result.push(LintItem {
-                    text: format!(
-                        "Asset path is too long, {} exceeds the maximum of {} for asset:\n{:?}",
-                        path_part.len(),
-                        self.max_size,
-                        asset.path
-                    ),
-                    locations: vec![asset.path.clone().into_os_string().into_string().unwrap()],
-                    rule_id: self.rule_id(),
-                    releasable_size: 0, // size stays, path shrinks
-                });
-            }
+        if assets.len() > self.max_size as usize {
+            vec![LintItem {
+                text: format!(
+                    "Found {} files, but the maximum amount is {}. Delete {} files to meet the criteria.",
+                    assets.len(),
+                    self.max_size,
+                    assets.len() - self.max_size as usize
+                ),
+                rule_id: self.rule_id(),
+                locations: Vec::new(),
+                releasable_size: 0, // we are not sure how man bytes could be freed up
+            }]
+        } else {
+            Vec::new()
         }
-
-        result
     }
 }
 
@@ -63,7 +54,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_path_length_greater() {
+    fn test_total_file_count_greater() {
         let assets = vec![
             AssetItem {
                 path: PathBuf::from("temp/temp_anim/hero_temp.png"),
@@ -85,16 +76,16 @@ mod test {
             },
         ];
 
-        let mut checker = FilePathLengthCheck::new(30);
+        let mut checker = FileCountCheck::new(5);
 
         let result = checker.check(&assets);
 
-        // generated one result
-        assert_eq!(result.len(), 1);
+        // Yay, we are below X files
+        assert!(result.is_empty());
     }
 
     #[test]
-    fn test_total_size_smaller() {
+    fn test_total_file_count_smaller() {
         let assets = vec![
             AssetItem {
                 path: PathBuf::from("temp/temp_anim/hero_temp.png"),
@@ -117,11 +108,11 @@ mod test {
         ];
 
         // checker for 240 char in path
-        let mut checker = FilePathLengthCheck::new(240);
+        let mut checker = FileCountCheck::new(1);
 
         let result = checker.check(&assets);
 
-        // No warnings
-        assert!(result.is_empty());
+        // Ohh no, we have more than X files
+        assert_eq!(result.len(), 1);
     }
 }

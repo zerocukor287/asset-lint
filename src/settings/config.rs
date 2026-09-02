@@ -10,6 +10,9 @@ pub struct Config {
     /// Check for duplicate files
     pub no_duplicates: bool,
 
+    /// Check for having no more than X files
+    pub max_file_count: Option<u64>,
+
     /// Check for long asset paths
     pub max_filename_length: Option<u64>,
 
@@ -39,6 +42,7 @@ impl Config {
         Config {
             assets_path: args.assets_path.or(toml.assets_path),
             no_duplicates: args.no_duplicates || toml.no_duplicates.is_some_and(|val| val),
+            max_file_count: args.max_file_count.or(toml.max_file_count),
             max_filename_length: args.max_filename_length.or(toml.max_filename_length),
             max_size: args.max_size.or(toml.max_size),
             max_total_size: args.max_total_size.or(toml.max_total_size),
@@ -63,6 +67,7 @@ pub fn create_config() -> Config {
     Config {
         assets_path: None,
         no_duplicates: false,
+        max_file_count: None,
         max_filename_length: None,
         max_size: None,
         max_total_size: None,
@@ -85,6 +90,7 @@ mod test {
 
         assert!(config.assets_path.is_none());
         assert!(config.no_duplicates == false);
+        assert!(config.max_file_count.is_none());
         assert!(config.max_size.is_none());
         assert!(config.max_total_size.is_none());
         assert!(config.no_placeholders.is_empty());
@@ -98,6 +104,7 @@ mod test {
         let args = Args {
             assets_path: Some("./assets/".to_string()),
             no_duplicates: true,
+            max_file_count: Some(5),
             max_filename_length: None,
             max_size: None,
             max_total_size: Some(1234),
@@ -109,6 +116,7 @@ mod test {
         let toml = TomlConfig {
             assets_path: None,
             no_duplicates: Some(false),
+            max_file_count: Some(0),
             max_filename_length: None,
             max_size: Some(14),
             max_total_size: None,
@@ -121,6 +129,7 @@ mod test {
 
         assert!(config.assets_path.is_some()); // from arg
         assert!(config.no_duplicates); // from arg
+        assert!(config.max_file_count.is_some()); // both set to value
         assert!(config.max_filename_length.is_none()); // both none
         assert!(config.max_size.is_some()); // from toml
         assert!(config.max_total_size.is_some()); // from arg

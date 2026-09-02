@@ -12,6 +12,7 @@ use crate::asset_list::exporter::export_asset_list;
 use crate::checks::Checker;
 use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
+use crate::checks::file_counter::FileCountCheck;
 use crate::checks::file_path_length::FilePathLengthCheck;
 use crate::checks::max_size::MaxSizeCheck;
 use crate::checks::max_total_size::MaxTotalSizeCheck;
@@ -84,6 +85,9 @@ fn create_checkers(config: &Config) -> Vec<Box<dyn Checker>> {
     if config.no_duplicates {
         checkers.push(Box::new(DuplicateChecker::new()));
     }
+    if let Some(max_file_count) = config.max_file_count {
+        checkers.push(Box::new(FileCountCheck::new(max_file_count)));
+    }
     if let Some(max_filename_length) = config.max_filename_length {
         checkers.push(Box::new(FilePathLengthCheck::new(max_filename_length)));
     }
@@ -111,6 +115,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: false,
+            max_file_count: None,
             max_filename_length: None,
             max_size: None,
             max_total_size: None,
@@ -129,6 +134,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: true,
+            max_file_count: Some(5),
             max_filename_length: None,
             max_size: None,
             max_total_size: Some(4),
@@ -139,7 +145,7 @@ mod test {
         };
 
         let checkers = create_checkers(&config);
-        assert_eq!(checkers.len(), 2);
+        assert_eq!(checkers.len(), 3);
     }
 
     #[test]
@@ -147,6 +153,7 @@ mod test {
         let config = Config {
             assets_path: None,
             no_duplicates: true,
+            max_file_count: Some(5),
             max_filename_length: Some(123),
             max_size: Some(1),
             max_total_size: Some(4),
@@ -157,6 +164,6 @@ mod test {
         };
 
         let checkers = create_checkers(&config);
-        assert_eq!(checkers.len(), 5);
+        assert_eq!(checkers.len(), 6);
     }
 }

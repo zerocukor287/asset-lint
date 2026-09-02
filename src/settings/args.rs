@@ -13,6 +13,10 @@ pub struct Args {
     #[arg(long, action = clap::ArgAction::SetTrue)]
     pub no_duplicates: bool,
 
+    /// Check for having no more than X files
+    #[arg(long)]
+    pub max_file_count: Option<u64>,
+
     /// Check for long asset paths
     #[arg(long)]
     pub max_filename_length: Option<u64>,
