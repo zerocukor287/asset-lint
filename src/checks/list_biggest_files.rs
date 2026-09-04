@@ -34,8 +34,8 @@ impl Checker for ListBiggestFiles {
         // make a local copy of the assets
         let mut assets_copy = Vec::from(assets);
 
-        // sort by size
-        assets_copy.sort_by(|left, right| right.size.cmp(&left.size));
+        // sort by size, biggest files first
+        assets_copy.sort_by_key(|file| std::cmp::Reverse(file.size));
 
         // take the biggest X files
         for (index, asset_item) in assets_copy
