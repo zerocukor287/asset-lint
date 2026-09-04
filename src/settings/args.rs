@@ -29,6 +29,10 @@ pub struct Args {
     #[arg(long)]
     pub max_total_size: Option<u64>,
 
+    /// List the biggest files
+    #[arg(long)]
+    pub list_biggest_files: Option<u64>,
+
     /// Check for placeholder assets
     #[arg(long)]
     pub no_placeholders: Option<Vec<String>>,

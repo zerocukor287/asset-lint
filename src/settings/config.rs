@@ -25,6 +25,9 @@ pub struct Config {
     /// Check for placeholder assets
     pub no_placeholders: Vec<String>,
 
+    /// List the biggest files
+    pub list_biggest_files: Option<u64>,
+
     /// Minimal console output
     pub quiet: bool,
 
@@ -46,6 +49,7 @@ impl Config {
             max_filename_length: args.max_filename_length.or(toml.max_filename_length),
             max_size: args.max_size.or(toml.max_size),
             max_total_size: args.max_total_size.or(toml.max_total_size),
+            list_biggest_files: args.list_biggest_files.or(toml.list_biggest_files),
             no_placeholders: args
                 .no_placeholders
                 .unwrap_or(toml.no_placeholders.unwrap_or_default()),
@@ -71,6 +75,7 @@ pub fn create_config() -> Config {
         max_filename_length: None,
         max_size: None,
         max_total_size: None,
+        list_biggest_files: None,
         no_placeholders: Vec::new(),
         quiet: false,
         sarif: false,
@@ -93,6 +98,7 @@ mod test {
         assert!(config.max_file_count.is_none());
         assert!(config.max_size.is_none());
         assert!(config.max_total_size.is_none());
+        assert!(config.list_biggest_files.is_none());
         assert!(config.no_placeholders.is_empty());
         assert!(config.quiet == false);
         assert!(config.sarif == false);
@@ -108,6 +114,7 @@ mod test {
             max_filename_length: None,
             max_size: None,
             max_total_size: Some(1234),
+            list_biggest_files: None,
             no_placeholders: Some(vec![".*".to_string(), ".*.psd".to_string()]),
             quiet: false,
             sarif: true,
@@ -120,6 +127,7 @@ mod test {
             max_filename_length: None,
             max_size: Some(14),
             max_total_size: None,
+            list_biggest_files: None,
             no_placeholders: None,
             quiet: Some(true),
             sarif: Some(false),
@@ -133,6 +141,7 @@ mod test {
         assert!(config.max_filename_length.is_none()); // both none
         assert!(config.max_size.is_some()); // from toml
         assert!(config.max_total_size.is_some()); // from arg
+        assert!(config.list_biggest_files.is_none()); // both none
         assert!(config.no_placeholders.len() > 1); // from arg
         assert!(config.quiet); // from toml
         assert!(config.sarif); // from arg

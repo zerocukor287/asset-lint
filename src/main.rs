@@ -14,6 +14,7 @@ use crate::checks::LintItem;
 use crate::checks::duplicates::DuplicateChecker;
 use crate::checks::file_counter::FileCountCheck;
 use crate::checks::file_path_length::FilePathLengthCheck;
+use crate::checks::list_biggest_files::ListBiggestFiles;
 use crate::checks::max_size::MaxSizeCheck;
 use crate::checks::max_total_size::MaxTotalSizeCheck;
 use crate::checks::placeholders::PlaceholderChecker;
@@ -97,6 +98,9 @@ fn create_checkers(config: &Config) -> Vec<Box<dyn Checker>> {
     if let Some(max_total_size) = config.max_total_size {
         checkers.push(Box::new(MaxTotalSizeCheck::new(max_total_size)));
     }
+    if let Some(list_biggest_files) = config.list_biggest_files {
+        checkers.push(Box::new(ListBiggestFiles::new(list_biggest_files)));
+    }
     if !config.no_placeholders.is_empty() {
         checkers.push(Box::new(PlaceholderChecker::new(
             config.no_placeholders.clone(),
@@ -108,6 +112,8 @@ fn create_checkers(config: &Config) -> Vec<Box<dyn Checker>> {
 
 #[cfg(test)]
 mod test {
+    use std::collections::HashSet;
+
     use super::*;
 
     #[test]
@@ -119,6 +125,7 @@ mod test {
             max_filename_length: None,
             max_size: None,
             max_total_size: None,
+            list_biggest_files: None,
             no_placeholders: Vec::new(),
             quiet: false,
             sarif: false,
@@ -138,6 +145,7 @@ mod test {
             max_filename_length: None,
             max_size: None,
             max_total_size: Some(4),
+            list_biggest_files: None,
             no_placeholders: Vec::new(),
             quiet: false,
             sarif: false,
@@ -157,6 +165,7 @@ mod test {
             max_filename_length: Some(123),
             max_size: Some(1),
             max_total_size: Some(4),
+            list_biggest_files: Some(5),
             no_placeholders: vec!["temp".to_string()],
             quiet: false,
             sarif: false,
@@ -164,6 +173,36 @@ mod test {
         };
 
         let checkers = create_checkers(&config);
-        assert_eq!(checkers.len(), 6);
+        assert_eq!(checkers.len(), 7);
+    }
+
+    #[test]
+    fn check_unique_rule_id() {
+        let config = Config {
+            assets_path: None,
+            no_duplicates: true,
+            max_file_count: Some(5),
+            max_filename_length: Some(123),
+            max_size: Some(1),
+            max_total_size: Some(4),
+            list_biggest_files: Some(5),
+            no_placeholders: vec!["temp".to_string()],
+            quiet: false,
+            sarif: false,
+            export_asset_list: None,
+        };
+
+        let checkers = create_checkers(&config);
+
+        // the len of the `HashSet` of the `rule_id`s should be equal to
+        // the len of the rules itself. Otherwise we have duplicated IDs.
+        assert_eq!(
+            checkers.len(),
+            checkers
+                .into_iter()
+                .map(|checker| { checker.rule_id() })
+                .collect::<HashSet<_>>()
+                .len()
+        );
     }
 }
