@@ -9,6 +9,7 @@ pub struct DuplicateChecker {}
 
 impl DuplicateChecker {
     pub fn new() -> DuplicateChecker {
+        println!("Checking for duplicates");
         DuplicateChecker {}
     }
 }

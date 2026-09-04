@@ -25,3 +25,6 @@ toml = "1.1.4"
 serde-sarif = "0.8.0"
 strum_macros = "0.28.0"
 human_bytes = "0.4.3"
+
+[dev-dependencies]
+assert_cmd = "2"

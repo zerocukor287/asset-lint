@@ -8,6 +8,15 @@ Find and fix problems in your assets.
 ![Crates.io](https://img.shields.io/crates/v/asset-lint.svg)
 [![codecov](https://codecov.io/github/zerocukor287/asset-lint/graph/badge.svg?token=6P7DDN6E5A)](https://codecov.io/github/zerocukor287/asset-lint)
 
+## Make sure your (web) builds meets all criteria
+Each platform has their own rules of the maximum number of files, size per file,
+total size, etc.  
+With specialized checks, `asset-lint` can validate your build and give suggestions
+which assets cause problems:
+```
+asset-lint --max-file-count 250 --max-total-size 50000000 --max-filename-length 128
+```
+
 ## Reduce the size of the shipped game
 With the `--no-duplicates` flag, `asset-lint` finds assets with same
 binary content, but different name, or path.  
@@ -52,6 +61,11 @@ or if you already have an `asset_lint_list.json` in the folder you're executing
 ```
 asset-lint --no-duplicates
 ```
+Simplify your life even more! With an [`asset-lint.toml`](./assets/asset-lint.toml) configuration file, no more parameters needed. Just execute
+```
+asset-lint
+```
+to run with your predefined ruleset.
 
 More info of the usage can be found on the [Wiki page](https://github.com/zerocukor287/asset-lint/wiki)
 
@@ -96,7 +110,7 @@ Version table of the `asset-lint-list` file and the possible checks:
 
 |version| supported features|
 |---|---|
-| 1 | Duplicate check, max size check, placeholder check |
+| 1 | Duplicate check, max size check, placeholder check, file name length check, file count check, total asset size check |
 
 ### Correlation between version numbers
 `asset-lint` uses semantic versioning:

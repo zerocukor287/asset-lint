@@ -1,0 +1,40 @@
+/// config structure read from asset-lint-config.toml
+#[derive(serde::Deserialize, Debug, Default)]
+pub struct TomlConfig {
+    // make everything `Optional` here
+    /// Path to check
+    pub assets_path: Option<String>,
+
+    /// Check for duplicate files
+    pub no_duplicates: Option<bool>,
+
+    /// Check for having no more than X files
+    pub max_file_count: Option<u64>,
+
+    /// Check for long asset paths
+    pub max_filename_length: Option<u64>,
+
+    /// Check for too big assets
+    pub max_size: Option<u64>,
+
+    /// Check for total size of all assets combined
+    pub max_total_size: Option<u64>,
+
+    /// List the biggest files
+    pub list_biggest_files: Option<u64>,
+
+    /// Check for placeholder assets
+    pub no_placeholders: Option<Vec<String>>,
+
+    /// Ignore assets for all the checks that matches these patterns
+    pub ignore: Option<Vec<String>>,
+
+    /// Minimal console output
+    pub quiet: Option<bool>,
+
+    /// SARIF output
+    pub sarif: Option<bool>,
+
+    /// Path to export naive `asset_lint_list.json`
+    pub export_asset_list: Option<String>,
+}

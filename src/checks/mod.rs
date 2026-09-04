@@ -1,7 +1,11 @@
 //! This module holds all the logic behind the different checks
 
 pub(crate) mod duplicates;
+pub(crate) mod file_counter;
+pub(crate) mod file_path_length;
+pub(crate) mod list_biggest_files;
 pub(crate) mod max_size;
+pub(crate) mod max_total_size;
 pub(crate) mod placeholders;
 
 use crate::asset_list::AssetItem;
