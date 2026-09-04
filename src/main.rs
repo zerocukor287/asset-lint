@@ -7,6 +7,7 @@
 
 use std::process::ExitCode;
 
+use crate::asset_list::builder::apply_ignore_list;
 use crate::asset_list::builder::read_or_build_asset_list;
 use crate::asset_list::exporter::export_asset_list;
 use crate::checks::Checker;
@@ -47,7 +48,12 @@ fn main() -> ExitCode {
     }
 
     // get the asset list
-    let assets = read_or_build_asset_list(config.assets_path);
+    let mut assets = read_or_build_asset_list(config.assets_path);
+
+    if !config.ignore.is_empty() {
+        // filter out ignored assets
+        assets = apply_ignore_list(assets, &config.ignore);
+    }
 
     // do the checks
     let mut lint_result: Vec<LintItem> = Vec::new();
@@ -127,6 +133,7 @@ mod test {
             max_total_size: None,
             list_biggest_files: None,
             no_placeholders: Vec::new(),
+            ignore: Vec::new(),
             quiet: false,
             sarif: false,
             export_asset_list: None,
@@ -147,6 +154,7 @@ mod test {
             max_total_size: Some(4),
             list_biggest_files: None,
             no_placeholders: Vec::new(),
+            ignore: Vec::new(),
             quiet: false,
             sarif: false,
             export_asset_list: None,
@@ -167,6 +175,7 @@ mod test {
             max_total_size: Some(4),
             list_biggest_files: Some(5),
             no_placeholders: vec!["temp".to_string()],
+            ignore: Vec::new(),
             quiet: false,
             sarif: false,
             export_asset_list: None,
@@ -187,6 +196,7 @@ mod test {
             max_total_size: Some(4),
             list_biggest_files: Some(5),
             no_placeholders: vec!["temp".to_string()],
+            ignore: Vec::new(),
             quiet: false,
             sarif: false,
             export_asset_list: None,

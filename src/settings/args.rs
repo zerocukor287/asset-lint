@@ -34,8 +34,12 @@ pub struct Args {
     pub list_biggest_files: Option<u64>,
 
     /// Check for placeholder assets
-    #[arg(long)]
+    #[arg(long, num_args = 1..)]
     pub no_placeholders: Option<Vec<String>>,
+
+    /// Ignore assets for all the checks that matches these patterns
+    #[arg(long, num_args = 1..)]
+    pub ignore: Option<Vec<String>>,
 
     /// Minimal console output
     #[arg(long, default_value_t = false)]

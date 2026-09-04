@@ -26,6 +26,9 @@ pub struct TomlConfig {
     /// Check for placeholder assets
     pub no_placeholders: Option<Vec<String>>,
 
+    /// Ignore assets for all the checks that matches these patterns
+    pub ignore: Option<Vec<String>>,
+
     /// Minimal console output
     pub quiet: Option<bool>,
 

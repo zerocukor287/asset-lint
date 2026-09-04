@@ -7,6 +7,7 @@ use std::{
 };
 
 use log::{debug, error};
+use regex::Regex;
 use walkdir::WalkDir;
 
 use crate::asset_list::{AssetItem, AssetType, reader::read_asset_lint_list_file};
@@ -74,6 +75,33 @@ fn calculate_hash(path: &Path) -> [u8; 32] {
     hasher.finalize().into()
 }
 
+pub fn apply_ignore_list(all_assets: Vec<AssetItem>, ignore_patterns: &[String]) -> Vec<AssetItem> {
+    let mut filtered_assets = Vec::<AssetItem>::new();
+    let asset_count = all_assets.len();
+
+    // create the patterns
+    let patterns: Vec<Regex> = ignore_patterns
+        .iter()
+        .filter_map(|arg0: &String| Regex::new(arg0).ok())
+        .collect();
+
+    // filter out everything that is in the ignore list
+    for asset in all_assets {
+        if let Ok(path_part) = asset.path.clone().into_os_string().into_string() {
+            debug!("Checking {}", path_part);
+            if !patterns.iter().any(|p| p.is_match(&path_part)) {
+                filtered_assets.push(asset);
+            }
+        }
+    }
+
+    println!(
+        "Ignore filtered out {} assets",
+        asset_count - filtered_assets.len()
+    );
+    filtered_assets
+}
+
 // categorize assets based on the extension
 fn guess_type(path: &Path) -> AssetType {
     if let Some(raw_extension) = path.extension()
@@ -105,12 +133,88 @@ fn guess_type(path: &Path) -> AssetType {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::*;
     use crate::asset_list::AssetType;
 
     #[test]
     fn test_type() {
         assert_eq!(guess_type(Path::new("./asset-lint.png")), AssetType::Image);
+        assert_eq!(guess_type(Path::new("./asset-lint.mp3")), AssetType::Sound);
+        assert_eq!(guess_type(Path::new("./asset-lint.toml")), AssetType::Text);
         assert_eq!(guess_type(Path::new("./asset/")), AssetType::Unknown);
+    }
+
+    #[test]
+    fn test_ignore_list_filter_this_binary() {
+        let assets = vec![AssetItem {
+            path: PathBuf::from("./asset-lint.exe"),
+            asset_type: AssetType::Unknown,
+            size: 57845,
+            hash: [3; 32],
+        }];
+
+        let ignore_list = vec![".*asset-lint.exe".to_string()];
+
+        let filtered_assets = apply_ignore_list(assets, &ignore_list);
+
+        assert!(filtered_assets.is_empty());
+    }
+
+    #[test]
+    fn test_ignore_list_filter_all() {
+        let assets = vec![AssetItem {
+            path: PathBuf::from("./asset-lint.exe"),
+            asset_type: AssetType::Unknown,
+            size: 57845,
+            hash: [3; 32],
+        }];
+
+        let ignore_list = vec![".*".to_string()];
+
+        let filtered_assets = apply_ignore_list(assets, &ignore_list);
+
+        assert!(filtered_assets.is_empty());
+    }
+
+    #[test]
+    fn test_ignore_list_filter_some() {
+        let assets = vec![
+            AssetItem {
+                path: PathBuf::from("./asset-lint.exe"),
+                asset_type: AssetType::Unknown,
+                size: 57845,
+                hash: [3; 32],
+            },
+            AssetItem {
+                path: PathBuf::from("./asset-lint.png"),
+                asset_type: AssetType::Unknown,
+                size: 57845,
+                hash: [3; 32],
+            },
+            AssetItem {
+                path: PathBuf::from("./asset-lint.ico"),
+                asset_type: AssetType::Unknown,
+                size: 57845,
+                hash: [3; 32],
+            },
+            AssetItem {
+                path: PathBuf::from("./asset-lint.sh"),
+                asset_type: AssetType::Unknown,
+                size: 57845,
+                hash: [3; 32],
+            },
+        ];
+
+        assert_eq!(assets.len(), 4);
+
+        // filter all exe
+        let ignore_list = vec![".*.exe".to_string()];
+
+        let filtered_assets = apply_ignore_list(assets, &ignore_list);
+
+        // previously we had 4 assets, but after the filter we have only 3
+        assert_eq!(filtered_assets.len(), 3);
     }
 }

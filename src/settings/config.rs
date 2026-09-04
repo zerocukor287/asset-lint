@@ -22,11 +22,14 @@ pub struct Config {
     /// Check for total size of all assets combined
     pub max_total_size: Option<u64>,
 
+    /// List the biggest files
+    pub list_biggest_files: Option<u64>,
+
     /// Check for placeholder assets
     pub no_placeholders: Vec<String>,
 
-    /// List the biggest files
-    pub list_biggest_files: Option<u64>,
+    /// Ignore assets for all the checks that matches these patterns
+    pub ignore: Vec<String>,
 
     /// Minimal console output
     pub quiet: bool,
@@ -53,6 +56,7 @@ impl Config {
             no_placeholders: args
                 .no_placeholders
                 .unwrap_or(toml.no_placeholders.unwrap_or_default()),
+            ignore: args.ignore.unwrap_or(toml.ignore.unwrap_or_default()),
             quiet: args.quiet || toml.quiet.is_some_and(|val| val),
             sarif: args.sarif || toml.sarif.is_some_and(|val| val),
             export_asset_list: args.export_asset_list.or(toml.export_asset_list),
@@ -77,6 +81,7 @@ pub fn create_config() -> Config {
         max_total_size: None,
         list_biggest_files: None,
         no_placeholders: Vec::new(),
+        ignore: Vec::new(),
         quiet: false,
         sarif: false,
         export_asset_list: None,
@@ -100,6 +105,7 @@ mod test {
         assert!(config.max_total_size.is_none());
         assert!(config.list_biggest_files.is_none());
         assert!(config.no_placeholders.is_empty());
+        assert!(config.ignore.is_empty());
         assert!(config.quiet == false);
         assert!(config.sarif == false);
         assert!(config.export_asset_list.is_none());
@@ -116,6 +122,7 @@ mod test {
             max_total_size: Some(1234),
             list_biggest_files: None,
             no_placeholders: Some(vec![".*".to_string(), ".*.psd".to_string()]),
+            ignore: Some(vec![".*asset-lint.exe".to_string()]),
             quiet: false,
             sarif: true,
             export_asset_list: Some("./asset-lint-list.json".to_string()),
@@ -129,6 +136,7 @@ mod test {
             max_total_size: None,
             list_biggest_files: None,
             no_placeholders: None,
+            ignore: None,
             quiet: Some(true),
             sarif: Some(false),
             export_asset_list: None,
@@ -143,6 +151,7 @@ mod test {
         assert!(config.max_total_size.is_some()); // from arg
         assert!(config.list_biggest_files.is_none()); // both none
         assert!(config.no_placeholders.len() > 1); // from arg
+        assert!(config.ignore.len() == 1); // from arg
         assert!(config.quiet); // from toml
         assert!(config.sarif); // from arg
         assert!(config.export_asset_list.is_some()); // from arg
