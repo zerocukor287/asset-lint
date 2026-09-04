@@ -8,6 +8,15 @@ Find and fix problems in your assets.
 ![Crates.io](https://img.shields.io/crates/v/asset-lint.svg)
 [![codecov](https://codecov.io/github/zerocukor287/asset-lint/graph/badge.svg?token=6P7DDN6E5A)](https://codecov.io/github/zerocukor287/asset-lint)
 
+## Make sure your (web) builds meets all criteria
+Each platform has their own rules of the maximum number of files, size per file,
+total size, etc.  
+With specialized checks, `asset-lint` can validate your build and give suggestions
+which assets cause problems:
+```
+asset-lint --max-file-count 250 --max-total-size 50000000 --max-filename-length 128
+```
+
 ## Reduce the size of the shipped game
 With the `--no-duplicates` flag, `asset-lint` finds assets with same
 binary content, but different name, or path.  
