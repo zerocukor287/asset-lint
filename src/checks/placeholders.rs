@@ -16,6 +16,7 @@ pub struct PlaceholderChecker {
 /// It works based on the file path, and matches against regex
 impl PlaceholderChecker {
     pub fn new(pattern: Vec<String>) -> PlaceholderChecker {
+        println!("Checking for placeholder assets");
         PlaceholderChecker {
             patterns: pattern
                 .into_iter()

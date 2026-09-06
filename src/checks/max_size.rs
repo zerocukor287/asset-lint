@@ -13,6 +13,7 @@ pub(crate) struct MaxSizeCheck {
 
 impl MaxSizeCheck {
     pub fn new(max_size: u64) -> MaxSizeCheck {
+        println!("Checking for assets bigger than {} bytes", max_size);
         MaxSizeCheck { max_size }
     }
 }

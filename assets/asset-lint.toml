@@ -1,0 +1,32 @@
+# `asset-lint.toml` example
+# it is used as a configuration file for [asset-lint](https://github.com/zerocukor287/asset-lint)
+
+# path of the asset folder
+assets_path = "./"
+
+# check for duplicates
+no_duplicates = true
+
+# make sure we have less than 1000 files
+max_file_count = 1000
+
+# check for long file names
+max_filename_length = 512
+
+# 200 MB file limit
+max_size = 209715200
+
+# 512 MB total size limit
+max_total_size = 536870912
+
+# search for psd files, or debug files
+no_placeholders = [".*.psd", ".*[Dd]ebug.*"]
+
+# print to console
+quiet = false
+
+# generate SARIF output
+sarif = false
+
+# export asset-list (uncomment to
+# export_asset_list = "./asset-lint-list.json"
