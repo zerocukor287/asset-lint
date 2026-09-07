@@ -4,8 +4,8 @@ Find and fix problems in your assets.
 
 `Asset Lint` statically analyzes the asset folder to find common problems.
 
-![Build status](https://github.com/zerocukor287/asset-lint/actions/workflows/rust.yml/badge.svg)
-![Crates.io](https://img.shields.io/crates/v/asset-lint.svg)
+[![Build status](https://github.com/zerocukor287/asset-lint/actions/workflows/rust.yml/badge.svg)](https://github.com/zerocukor287/asset-lint/actions/workflows/rust.yml)
+[![Crates.io](https://img.shields.io/crates/v/asset-lint.svg)](https://crates.io/crates/asset-lint)
 [![codecov](https://codecov.io/github/zerocukor287/asset-lint/graph/badge.svg?token=6P7DDN6E5A)](https://codecov.io/github/zerocukor287/asset-lint)
 
 ## Make sure your (web) builds meets all criteria
