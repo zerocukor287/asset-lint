@@ -16,6 +16,8 @@ which assets cause problems:
 ```
 asset-lint --max-file-count 250 --max-total-size 50000000 --max-filename-length 128
 ```
+Or head to [itch.io](https://chromaticcarrot.itch.io/asset-lint-itchio) to get a 
+ready to use ruleset tailored to itch.io's requirements while supporting future development.
 
 ## Reduce the size of the shipped game
 With the `--no-duplicates` flag, `asset-lint` finds assets with same
