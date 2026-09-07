@@ -12,19 +12,19 @@ categories = ["command-line-utilities", "game-development"]
 keywords = ["gamedev", "assets", "linter"]
 
 [dependencies]
-clap_derive = "4.6.3"
-clap = { version = "4.6.3", features = ["derive"] }
-log = "0.4.33"
-env_logger = "0.11.11"
-walkdir = "2.5.0"
-blake3 = "1.8.5"
-regex = "1.13.1"
-serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.151"
-toml = "1.1.4"
-serde-sarif = "0.8.0"
-strum_macros = "0.28.0"
-human_bytes = "0.4.3"
+clap_derive = "4.6"
+clap = { version = "4.6", features = ["derive"] }
+log = "0.4"
+env_logger = "0.11"
+walkdir = "2.5"
+blake3 = "1.8"
+regex = "1.13"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "1.1"
+serde-sarif = "0.8"
+strum_macros = "0.28"
+human_bytes = "0.4"
 
 [dev-dependencies]
 assert_cmd = "2"
