@@ -17,11 +17,38 @@ fn ignore_multiple_patterns() {
     let mut cmd = Command::cargo_bin("asset-lint").unwrap();
 
     cmd.args([
-        "--no-placeholders",
+        "--ignore",
         ".*asset-lint.toml",
         ".*asset-lint.exe",
         "do-asset-lint.bat",
     ])
     .assert()
     .success();
+}
+
+#[test]
+fn duplicates_different_calling_styles() {
+    {
+        let mut cmd = Command::cargo_bin("asset-lint").unwrap();
+
+        cmd.args(["--assets-path", "./assets/"]).assert().success();
+    }
+    {
+        let mut cmd = Command::cargo_bin("asset-lint").unwrap();
+        cmd.args(["--assets-path", "./assets/", "--no-duplicates"])
+            .assert()
+            .failure(); // it finds a duplicate
+    }
+    {
+        let mut cmd = Command::cargo_bin("asset-lint").unwrap();
+        cmd.args(["--assets-path", "./assets/", "--no-duplicates", "true"])
+            .assert()
+            .failure(); // it finds a duplicate
+    }
+    {
+        let mut cmd = Command::cargo_bin("asset-lint").unwrap();
+        cmd.args(["--assets-path", "./assets/", "--no-duplicates", "false"])
+            .assert()
+            .success();
+    }
 }
