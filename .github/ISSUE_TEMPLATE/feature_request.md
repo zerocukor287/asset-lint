@@ -6,8 +6,9 @@ labels: ''
 assignees: ''
 
 ---
+*Please give more info by changing the paragraphs below. Remove this line after changing them.*
 
-**Is your feature request related to a problem? Please describe.**
+**Description of the root cause**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
 **Describe the solution you'd like**
