@@ -10,8 +10,8 @@ pub struct Args {
     pub assets_path: Option<String>,
 
     /// Check for duplicate files
-    #[arg(long, action = clap::ArgAction::SetTrue)]
-    pub no_duplicates: bool,
+    #[arg(long, num_args(0..=1), action=clap::ArgAction::SetTrue)]
+    pub no_duplicates: Option<bool>,
 
     /// Check for having no more than X files
     #[arg(long)]
@@ -42,12 +42,12 @@ pub struct Args {
     pub ignore: Option<Vec<String>>,
 
     /// Minimal console output
-    #[arg(long, default_value_t = false)]
-    pub quiet: bool,
+    #[arg(long, num_args(0..=1), action=clap::ArgAction::SetTrue)]
+    pub quiet: Option<bool>,
 
     /// SARIF output
-    #[arg(long, default_value_t = false)]
-    pub sarif: bool,
+    #[arg(long, num_args(0..=1), action=clap::ArgAction::SetTrue)]
+    pub sarif: Option<bool>,
 
     /// Path to export naive `asset_lint_list.json`
     #[arg(long)]
