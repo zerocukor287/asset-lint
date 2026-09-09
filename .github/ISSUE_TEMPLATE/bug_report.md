@@ -6,33 +6,25 @@ labels: ''
 assignees: ''
 
 ---
+*Please give more info by changing the paragraphs below. Remove any of them that is not relevant, including this line.*
 
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+**Version info**
+Which version of `asset-lint` is affected with this bug. Run `asset-lint --version` to see the version.
+
+**Operating system**
+On which operating system you experienced the problem? Win11, Ubuntu24 or something else, maybe on multiple of them?
+
 **To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+What was the calling command? For example `asset-lint --any-flag-that-was-used`.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Assets list**
+If possible, please run `asset-lint` with the `--export-asset-list ./asset-lint-list.json`, and attach the exported file to the bug report.
 
 **Additional context**
-Add any other context about the problem here.
+Add any other context about the problem here. Logs, error output, callstack, generated sarif, etc.
