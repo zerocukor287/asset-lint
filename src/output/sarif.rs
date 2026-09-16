@@ -38,7 +38,7 @@ impl LintOutput for SarifOutput {
             .map(|checker| {
                 ReportingDescriptor::builder()
                     .name(checker.rule_name())
-                    .id(checker.rule_id().to_string())
+                    .id(checker.rule_id_text())
                     .build()
             })
             .collect();
