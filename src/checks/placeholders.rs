@@ -31,7 +31,7 @@ impl Checker for PlaceholderChecker {
         1030
     }
     fn rule_name(&self) -> String {
-        String::from("placeholder-checker")
+        String::from("PlaceholderChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning

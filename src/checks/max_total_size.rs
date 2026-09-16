@@ -22,7 +22,7 @@ impl Checker for MaxTotalSizeCheck {
         1040
     }
     fn rule_name(&self) -> String {
-        String::from("max-total-size-checker")
+        String::from("MaxTotalSizeChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning

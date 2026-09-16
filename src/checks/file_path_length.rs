@@ -24,7 +24,7 @@ impl Checker for FilePathLengthCheck {
         1050
     }
     fn rule_name(&self) -> String {
-        String::from("file-path-length-checker")
+        String::from("FilepathLengthChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning

@@ -23,7 +23,7 @@ impl Checker for ListBiggestFiles {
         1070
     }
     fn rule_name(&self) -> String {
-        String::from("list-biggest-files")
+        String::from("ListBiggestFiles")
     }
     fn severity(&self) -> Severity {
         Severity::Info

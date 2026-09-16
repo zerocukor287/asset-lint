@@ -21,7 +21,7 @@ impl Checker for DuplicateChecker {
         1001
     }
     fn rule_name(&self) -> String {
-        String::from("duplicate-checker")
+        String::from("DuplicateChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning

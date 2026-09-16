@@ -21,7 +21,7 @@ impl Checker for FileCountCheck {
         1060
     }
     fn rule_name(&self) -> String {
-        String::from("file-count-checker")
+        String::from("FileCountChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning
