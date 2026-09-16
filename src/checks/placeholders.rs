@@ -36,6 +36,15 @@ impl Checker for PlaceholderChecker {
     fn severity(&self) -> Severity {
         Severity::Warning
     }
+    fn description(&self) -> String {
+        "Creates a warning per asset when they match one of the patterns".to_string()
+    }
+    fn help(&self) -> String {
+        "Replace, remove, modify, or rename the asset - depending on the intent.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/no-placeholders".to_string()
+    }
 
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();

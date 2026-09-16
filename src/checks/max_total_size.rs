@@ -27,6 +27,15 @@ impl Checker for MaxTotalSizeCheck {
     fn severity(&self) -> Severity {
         Severity::Warning
     }
+    fn description(&self) -> String {
+        "Creates a single warning if the total size of all assets combined are greater than the margin".to_string()
+    }
+    fn help(&self) -> String {
+        "Reduce one or more file size(s) to fit the required margin.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/max-total-size".to_string()
+    }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let total_size: u64 = assets.iter().map(|item| item.size).sum();
         if total_size > self.max_size {

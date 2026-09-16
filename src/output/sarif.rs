@@ -39,6 +39,22 @@ impl LintOutput for SarifOutput {
                 ReportingDescriptor::builder()
                     .name(checker.rule_name())
                     .id(checker.rule_id_text())
+                    .short_description(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.description(),
+                    })
+                    .full_description(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.description(),
+                    })
+                    .help(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.help(),
+                    })
+                    .help_uri(checker.help_link())
                     .build()
             })
             .collect();

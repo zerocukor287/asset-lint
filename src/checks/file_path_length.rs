@@ -29,6 +29,15 @@ impl Checker for FilePathLengthCheck {
     fn severity(&self) -> Severity {
         Severity::Warning
     }
+    fn description(&self) -> String {
+        "Finds assets whose file path are too long".to_string()
+    }
+    fn help(&self) -> String {
+        "Make the folder structure shallow, or rename the asset.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/max-filename-length".to_string()
+    }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
 

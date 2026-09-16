@@ -26,6 +26,15 @@ impl Checker for DuplicateChecker {
     fn severity(&self) -> Severity {
         Severity::Warning
     }
+    fn description(&self) -> String {
+        "Finds duplicates among the assets".to_string()
+    }
+    fn help(&self) -> String {
+        "Multiple assets have the same binary content. If those assets are interchangeable, consider using only one of those to reduce the size of the shipped binary.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/no-duplicates".to_string()
+    }
 
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();

@@ -26,6 +26,16 @@ impl Checker for FileCountCheck {
     fn severity(&self) -> Severity {
         Severity::Warning
     }
+    fn description(&self) -> String {
+        "Issues a warning if the total number of files exceeds the maximum.".to_string()
+    }
+    fn help(&self) -> String {
+        "Merge files together, or remove files to meet the criteria.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/max-file-count".to_string()
+    }
+
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         if assets.len() > self.max_size as usize {
             vec![LintItem {
