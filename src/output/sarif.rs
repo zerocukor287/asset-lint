@@ -25,7 +25,8 @@ impl LintOutput for SarifOutput {
         // create basic structure
         let mut sarif = Sarif::builder()
             .version(Version::V2_1_0.to_string())
-            .schema(serde_sarif::sarif::SCHEMA_URL)
+            // schema should be: serde_sarif::sarif::SCHEMA_URL but that is outdated.
+            .schema("https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json".to_string())
             .build();
 
         // description is copied from `cargo.toml`
