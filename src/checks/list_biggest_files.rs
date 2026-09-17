@@ -23,10 +23,19 @@ impl Checker for ListBiggestFiles {
         1070
     }
     fn rule_name(&self) -> String {
-        String::from("list-biggest-files")
+        String::from("ListBiggestFiles")
     }
     fn severity(&self) -> Severity {
         Severity::Info
+    }
+    fn description(&self) -> String {
+        "Creates info messages of the biggest files.".to_string()
+    }
+    fn help(&self) -> String {
+        "It is not recommended to use with the `--sarif` flag".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/list-biggest-files".to_string()
     }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();
