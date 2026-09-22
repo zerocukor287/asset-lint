@@ -28,7 +28,13 @@ pub enum Severity {
 pub trait Checker {
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem>;
     fn rule_name(&self) -> String;
+    fn description(&self) -> String;
+    fn help(&self) -> String;
+    fn help_link(&self) -> String;
     fn rule_id(&self) -> i64;
+    fn rule_id_text(&self) -> String {
+        format!("AL{}", self.rule_id())
+    }
     fn severity(&self) -> Severity;
 }
 

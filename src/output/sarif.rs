@@ -4,8 +4,8 @@ use std::fs::File;
 
 use log::error;
 use serde_sarif::sarif::{
-    ArtifactLocation, Location, PhysicalLocation, Result, ResultLevel, Run, Sarif, ToolComponent,
-    Version,
+    ArtifactLocation, Location, MultiformatMessageString, PhysicalLocation, ReportingDescriptor,
+    Result, ResultLevel, Run, Sarif, ToolComponent, Version,
 };
 
 use crate::{
@@ -22,16 +22,60 @@ impl LintOutput for SarifOutput {
         active_checkers: &[Box<dyn Checker>],
     ) {
         println!("Generating 'asset-lint.sarif' file");
-
         // create basic structure
         let mut sarif = Sarif::builder()
             .version(Version::V2_1_0.to_string())
-            .schema(serde_sarif::sarif::SCHEMA_URL)
+            // schema should be: serde_sarif::sarif::SCHEMA_URL but that is outdated.
+            .schema("https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json".to_string())
             .build();
+
+        // description is copied from `cargo.toml`
+        let description =
+            "CLI tool to find common problems with assets during game development".to_string();
+
+        // collect the rules
+        let rules: Vec<ReportingDescriptor> = active_checkers
+            .iter()
+            .map(|checker| {
+                ReportingDescriptor::builder()
+                    .name(checker.rule_name())
+                    .id(checker.rule_id_text())
+                    .short_description(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.description(),
+                    })
+                    .full_description(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.description(),
+                    })
+                    .help(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: checker.help(),
+                    })
+                    .help_uri(checker.help_link())
+                    .build()
+            })
+            .collect();
 
         // register ourselves as a tool
         let mut run = Run::builder()
-            .tool(ToolComponent::builder().name("asset-lint").build())
+            .tool(
+                ToolComponent::builder()
+                    .name("asset-lint")
+                    .full_name("asset-lint")
+                    .short_description(MultiformatMessageString {
+                        markdown: None,
+                        properties: None,
+                        text: description,
+                    })
+                    .information_uri("https://github.com/zerocukor287/asset-lint/wiki")
+                    .semantic_version(env!("CARGO_PKG_VERSION"))
+                    .rules(rules)
+                    .build(),
+            )
             .build();
 
         // iterate over the lint assets, and report as a results
@@ -73,10 +117,8 @@ impl LintOutput for SarifOutput {
             }
         }
 
-        // add results if not empty
-        if !results.is_empty() {
-            run.results = Some(results);
-        }
+        // add results
+        run.results = Some(results);
 
         // add everything above to the sarif structure
         sarif.runs.push(run);

@@ -25,10 +25,19 @@ impl Checker for MaxSizeCheck {
         1020
     }
     fn rule_name(&self) -> String {
-        String::from("max-size-checker")
+        String::from("MaxSizeChecker")
     }
     fn severity(&self) -> Severity {
         Severity::Warning
+    }
+    fn description(&self) -> String {
+        "Finds assets that are too big.".to_string()
+    }
+    fn help(&self) -> String {
+        "Reduce the file size to fit the required margin.".to_string()
+    }
+    fn help_link(&self) -> String {
+        "https://github.com/zerocukor287/asset-lint/wiki/max-size".to_string()
     }
     fn check(&mut self, assets: &[AssetItem]) -> Vec<LintItem> {
         let mut result: Vec<LintItem> = Vec::new();

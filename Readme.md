@@ -47,6 +47,11 @@ Just add the `--sarif` flag to the calling arguments.
 By using the `asset_lint_list.json` format, `asset-lint` can work with Bevy,
 Godot, Unity, or other game engines.
 
+## Missing something?
+Head to the Issues tab and check existing issues. React on those that you find
+valuable.  
+Not listed? Create a new issue!
+
 # Easy Installation
 Head to the [Releases](https://github.com/zerocukor287/asset-lint/releases)
 and download the latest binary for your platform.  
