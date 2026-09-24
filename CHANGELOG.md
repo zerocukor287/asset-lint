@@ -3,6 +3,10 @@
 These are the changes that happened to `Asset-lint` between the versions.  
 This format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 0.1.4
+### Fixed
+- Github release
+
 ## 0.1.3
 ### Fixed
 - Fix `--sarif` when no errors or warnings are found
